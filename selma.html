@@ -76,6 +76,22 @@ h2.sec{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-si
 .choix button[data-v="oui"][aria-pressed="true"]{background:linear-gradient(135deg,var(--matcha),#8FAE7C)}
 .choix button[data-v="non"][aria-pressed="true"]{background:linear-gradient(135deg,var(--momiji),var(--kaki))}
 .choix button[data-v="?"][aria-pressed="true"]{background:linear-gradient(135deg,var(--ai),var(--ai2))}
+.joindre{display:inline-flex;align-items:center;gap:7px;margin-top:11px;font:600 13px var(--sans);
+  padding:9px 14px;border-radius:999px;border:1px dashed var(--line);background:var(--paper2);
+  color:var(--ai2);cursor:pointer;transition:transform .18s var(--ease)}
+.joindre:active{transform:scale(.95)}
+.joindre svg{width:14px;height:14px}
+.fichiers{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.fichiers:empty{display:none}
+.fichier{display:flex;align-items:center;gap:10px;font-size:12.5px;background:var(--line2);
+  border-radius:12px;padding:8px 10px}
+.fichier .vig{width:32px;height:32px;border-radius:8px;flex:none;object-fit:cover;display:block}
+.fichier .pdf{width:32px;height:32px;border-radius:8px;flex:none;display:grid;place-items:center;
+  background:var(--momiji);color:#fff;font:700 9.5px var(--sans)}
+.fichier .nom{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink)}
+.fichier .po{flex:none;color:var(--mute);font-size:11.5px}
+.fichier button{flex:none;background:none;border:0;color:var(--mute);cursor:pointer;
+  font:400 19px/1 var(--sans);padding:0 3px}
 textarea{width:100%;margin-top:10px;font:400 13.5px/1.5 var(--sans);color:var(--ink);background:var(--paper2);
   border:1px solid var(--line);border-radius:13px;padding:10px 12px;resize:vertical;min-height:40px}
 textarea::placeholder{color:var(--mute)}
@@ -175,17 +191,66 @@ textarea:focus{outline:2px solid color-mix(in srgb,var(--ai2) 45%,transparent);o
     {id:'p12', q:"Le voyage se termine bien le 3 novembre ?", d:"Stippl affiche le voyage jusqu'au 6 novembre."}
   ];
 
+  // Un PDF ne tient pas dans localStorage : les pièces jointes vont dans IndexedDB,
+  // qui garde de vrais fichiers et survit à la fermeture de la page.
+  var BASE = null, FICHIERS = [], VIGNETTES = {};
+  function base() {
+    if (BASE) return Promise.resolve(BASE);
+    return new Promise(function (ok, ko) {
+      var r = indexedDB.open('japon-billets', 1);
+      r.onupgradeneeded = function () { r.result.createObjectStore('f', {keyPath: 'id'}); };
+      r.onsuccess = function () { BASE = r.result; ok(BASE); };
+      r.onerror = function () { ko(r.error); };
+    });
+  }
+  function coffre(mode) {
+    return base().then(function (d) { return d.transaction('f', mode).objectStore('f'); });
+  }
+  function ajouterFichier(billet, f) {
+    return coffre('readwrite').then(function (c) {
+      return new Promise(function (ok, ko) {
+        var r = c.add({id: billet + '|' + Date.now() + '|' + Math.random().toString(36).slice(2, 7),
+                       billet: billet, nom: f.name, type: f.type, taille: f.size, blob: f});
+        r.onsuccess = function () { ok(); }; r.onerror = function () { ko(r.error); };
+      });
+    });
+  }
+  function listerFichiers() {
+    return coffre('readonly').then(function (c) {
+      return new Promise(function (ok) { var r = c.getAll(); r.onsuccess = function () { ok(r.result || []); }; r.onerror = function () { ok([]); }; });
+    }).catch(function () { return []; });
+  }
+  function retirerFichier(id) {
+    return coffre('readwrite').then(function (c) {
+      return new Promise(function (ok) { var r = c.delete(id); r.onsuccess = ok; r.onerror = ok; });
+    });
+  }
+  var poids = function (o) { return o < 1024 ? o + ' o' : o < 1048576 ? Math.round(o/1024) + ' Ko' : (o/1048576).toFixed(1) + ' Mo'; };
+  var pieces = function (id) { return FICHIERS.filter(function (f) { return f.billet === id; }); };
+
   var etat = {};
   try { etat = JSON.parse(localStorage.getItem(CLE) || '{}') || {}; } catch (e) { etat = {}; }
   var garder = function () { try { localStorage.setItem(CLE, JSON.stringify(etat)); } catch (e) {} };
 
   function rendre() {
     $('#billets').innerHTML = BILLETS.map(function (b) {
-      var ok = etat[b.id] === 'oui';
+      var jointes = pieces(b.id), ok = etat[b.id] === 'oui' || jointes.length > 0;
+      var liste = jointes.map(function (f) {
+        var vig = /^image\//.test(f.type || '')
+          ? '<img class="vig" alt="" src="' + (VIGNETTES[f.id] || '') + '">'
+          : '<span class="pdf">PDF</span>';
+        return '<div class="fichier">' + vig + '<span class="nom">' + esc(f.nom) + '</span>' +
+          '<span class="po">' + poids(f.taille) + '</span>' +
+          '<button type="button" data-retirer="' + esc(f.id) + '" aria-label="Retirer">×</button></div>';
+      }).join('');
       return '<div class="carte' + (ok ? ' fait' : '') + '" data-c="' + b.id + '">' +
         '<h3>' + esc(b.titre) + '</h3><div class="quand">' + esc(b.quand) + '</div>' +
-        '<div class="choix"><button type="button" data-id="' + b.id + '" data-v="oui" aria-pressed="' + ok + '">Je l’ai</button>' +
-        '<button type="button" data-id="' + b.id + '" data-v="non" aria-pressed="' + (etat[b.id] === 'non') + '">Pas encore</button></div></div>';
+        '<div class="choix"><button type="button" data-id="' + b.id + '" data-v="oui" aria-pressed="' + (etat[b.id] === 'oui') + '">Je l’ai</button>' +
+        '<button type="button" data-id="' + b.id + '" data-v="non" aria-pressed="' + (etat[b.id] === 'non') + '">Pas encore</button></div>' +
+        '<label class="joindre"><input type="file" accept="image/*,application/pdf" multiple hidden data-pour="' + b.id + '">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M12 5.5v13M5.5 12h13"/></svg>' +
+        (jointes.length ? 'Ajouter un autre fichier' : 'Joindre le billet') + '</label>' +
+        '<div class="fichiers">' + liste + '</div></div>';
     }).join('') || '<div class="carte"><h3>Aucun billet à suivre pour l’instant.</h3></div>';
 
     $('#points').innerHTML = POINTS.map(function (p) {
@@ -201,7 +266,7 @@ textarea:focus{outline:2px solid color-mix(in srgb,var(--ai2) 45%,transparent);o
     }).join('');
 
     var total = BILLETS.length + POINTS.length;
-    var faits = BILLETS.filter(function (b) { return etat[b.id]; }).length +
+    var faits = BILLETS.filter(function (b) { return etat[b.id] || pieces(b.id).length; }).length +
                 POINTS.filter(function (p) { return p.libre ? (etat[p.id + '-n'] || '').trim() : etat[p.id]; }).length;
     $('#barre').style.width = total ? (faits / total * 100) + '%' : '0';
     $('#compte').innerHTML = '<b>' + faits + '</b> sur ' + total + ' renseigné' + (faits > 1 ? 's' : '');
@@ -216,6 +281,22 @@ textarea:focus{outline:2px solid color-mix(in srgb,var(--ai2) 45%,transparent);o
     garder();
     var y = window.scrollY; rendre(); window.scrollTo(0, y);
   });
+  document.addEventListener('change', function (ev) {
+    var inp = ev.target.closest('input[type=file][data-pour]');
+    if (!inp || !inp.files || !inp.files.length) return;
+    var pour = inp.dataset.pour, fs = [].slice.call(inp.files);
+    inp.value = '';
+    Promise.all(fs.map(function (f) { return ajouterFichier(pour, f); }))
+      .then(function () { etat[pour] = 'oui'; garder(); return rafraichir(); })
+      .catch(function () { $('#etat').textContent = 'Ce fichier n’a pas pu être gardé'; });
+  });
+
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest('button[data-retirer]');
+    if (!b) return;
+    retirerFichier(b.dataset.retirer).then(rafraichir);
+  });
+
   document.addEventListener('input', function (ev) {
     var t = ev.target.closest('textarea[data-note]');
     if (!t) return;
@@ -234,7 +315,9 @@ textarea:focus{outline:2px solid color-mix(in srgb,var(--ai2) 45%,transparent);o
     L.push('BILLETS');
     BILLETS.forEach(function (b) {
       var r = etat[b.id];
-      L.push((r === 'oui' ? '[x] ' : r === 'non' ? '[ ] ' : '[?] ') + b.titre + ' — ' + b.quand);
+      var j = pieces(b.id);
+      L.push((r === 'oui' || j.length ? '[x] ' : r === 'non' ? '[ ] ' : '[?] ') + b.titre + ' — ' + b.quand +
+             (j.length ? '  (' + j.length + ' fichier' + (j.length > 1 ? 's' : '') + ' joint' + (j.length > 1 ? 's' : '') + ')' : ''));
     });
     L.push('', 'POINTS À TRANCHER');
     POINTS.forEach(function (p) {
@@ -244,17 +327,31 @@ textarea:focus{outline:2px solid color-mix(in srgb,var(--ai2) 45%,transparent);o
       L.push('• ' + p.q);
       L.push('  → ' + rep + (!p.libre && n ? ' — ' + n : ''));
     });
-    L.push('', 'Les billets suivent dans la conversation.');
+    L.push('', FICHIERS.length
+      ? FICHIERS.length + ' billet' + (FICHIERS.length > 1 ? 's' : '') + ' joint' + (FICHIERS.length > 1 ? 's' : '') + ' à ce message.'
+      : 'Les billets suivent dans la conversation.');
     return L.join('\n');
   }
 
   $('#envoyer').addEventListener('click', function () {
     var texte = recap();
     var dire = function (m) { $('#etat').textContent = m; setTimeout(function () { $('#etat').textContent = ''; }, 4000); };
+    var titre = 'To-do Selma — Japon 2026';
     if (navigator.share) {
-      navigator.share({title: 'To-do Selma — Japon 2026', text: texte})
-        .then(function () { dire('Envoyé, merci !'); })
-        .catch(function (e) { if (e && e.name !== 'AbortError') dire('Envoi annulé'); });
+      var fichiers = FICHIERS.map(function (f) {
+        return new File([f.blob], f.nom, {type: f.type || 'application/octet-stream'});
+      });
+      // Tous les téléphones ne savent pas partager des fichiers : on vérifie avant d'essayer.
+      var avecF = fichiers.length > 0 && navigator.canShare &&
+                  navigator.canShare({files: fichiers, text: texte, title: titre});
+      navigator.share(avecF ? {files: fichiers, text: texte, title: titre} : {text: texte, title: titre})
+        .then(function () { dire(avecF ? 'Envoyé avec les billets, merci !' : 'Envoyé — pense à joindre les billets'); })
+        .catch(function (e) {
+          if (!e || e.name === 'AbortError') return;
+          navigator.share({text: texte, title: titre}).then(
+            function () { dire('Envoyé — les billets n’ont pas suivi, joins-les au message'); },
+            function () { dire('Envoi impossible'); });
+        });
       return;
     }
     var montrer = function (m) {
@@ -269,7 +366,21 @@ textarea:focus{outline:2px solid color-mix(in srgb,var(--ai2) 45%,transparent);o
     } else { montrer('Le texte est en bas, déjà sélectionné'); }
   });
 
+  function rafraichir() {
+    return listerFichiers().then(function (fs) {
+      FICHIERS = fs;
+      Object.keys(VIGNETTES).forEach(function (k) {
+        if (!fs.some(function (f) { return f.id === k; })) { URL.revokeObjectURL(VIGNETTES[k]); delete VIGNETTES[k]; }
+      });
+      fs.forEach(function (f) {
+        if (/^image\//.test(f.type || '') && !VIGNETTES[f.id]) VIGNETTES[f.id] = URL.createObjectURL(f.blob);
+      });
+      var y = window.scrollY; rendre(); window.scrollTo(0, y);
+    });
+  }
+
   rendre();
+  rafraichir();
 })();
 </script>
 </body>
