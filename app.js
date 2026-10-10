@@ -281,8 +281,9 @@ function wicon(k, w) {
   const attendus = ACTS.filter(a => a.billet === 'attendu' && !passe(a.date)).length;
   const pris = ACTS.filter(a => a.billet === 'pris' && !passe(a.date)).length;
   if (attendus || pris) $('#billets').innerHTML =
-    `<div class="recap">${I.ticket}<span>${attendus ? `<b>${attendus}</b> billet${attendus > 1 ? 's' : ''} à récupérer auprès de Selma` : ''}`
-    + `${attendus && pris ? ' · ' : ''}${pris ? `<b>${pris}</b> en main` : ''}</span></div>`;
+    `<a class="recap" href="selma.html">${I.ticket}<span>${attendus ? `<b>${attendus}</b> billet${attendus > 1 ? 's' : ''} à récupérer auprès de Selma` : ''}`
+    + `${attendus && pris ? ' · ' : ''}${pris ? `<b>${pris}</b> en main` : ''}<em>Ouvrir sa to-do</em></span>`
+    + I.fleche.replace('<svg ', '<svg class="f" ') + `</a>`;
 
   $('#acts').addEventListener('click', ev => {
     const b = ev.target.closest('[data-ics]'); if (!b) return;

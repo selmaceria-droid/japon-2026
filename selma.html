@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2C3A63" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141C33" media="(prefers-color-scheme: dark)">
+<title>To-do Selma · Japon 2026</title>
+<link rel="apple-touch-icon" href="icon-192.png"><link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --momiji:#D2522F; --kaki:#E07A3E; --kin:#E0A944; --ai:#2C3A63; --ai2:#44548A;
+  --matcha:#6F9160; --sakura:#E79BB0;
+  --bg:#FBF6F0; --bg2:#F3EADF; --paper:#FFF; --paper2:#FFFCF8;
+  --ink:#2B2320; --mute:#8C8077; --line:#EDE2D6; --line2:#F5EDE3;
+  --sh:0 1px 2px rgba(74,48,28,.05), 0 6px 18px -10px rgba(74,48,28,.20);
+  --serif:"Shippori Mincho","Hiragino Mincho ProN",Georgia,serif;
+  --sans:"Zen Kaku Gothic New",-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --safe-t:env(safe-area-inset-top,0px); --safe-b:env(safe-area-inset-bottom,0px);
+  --ease:cubic-bezier(.22,.92,.30,1);
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#14100E; --bg2:#1C1613; --paper:#211A17; --paper2:#271F1A;
+  --ink:#F2E9E1; --mute:#A3948A; --line:#352A24; --line2:#2A211C;
+  --ai:#3C4C82; --ai2:#5465A2; --momiji:#E4693F; --kin:#E8B757; --matcha:#8BAC7A;
+  --sh:0 1px 2px rgba(0,0,0,.45), 0 6px 18px -10px rgba(0,0,0,.6);
+}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);background-image:radial-gradient(1100px 520px at 50% -8%,var(--bg2),transparent 70%);
+  background-attachment:fixed;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0}
+.top{position:relative;overflow:hidden;padding:calc(var(--safe-t) + 30px) 22px 70px;color:#fff;
+  background:linear-gradient(155deg,#2C3A63 0%,#3C3C6E 42%,#7A3B55 100%)}
+@media (prefers-color-scheme:dark){.top{background:linear-gradient(155deg,#151D38 0%,#241F44 45%,#4A2437 100%)}}
+.top .glow{position:absolute;width:300px;height:300px;right:-110px;top:-130px;border-radius:50%;
+  background:radial-gradient(circle,#E8853C 0%,transparent 68%);opacity:.6}
+.top .in{position:relative;z-index:2;max-width:620px;margin:0 auto}
+.top h1{font-family:var(--serif);font-weight:700;font-size:clamp(27px,8vw,34px);line-height:1.1}
+.top p{margin:7px 0 0;opacity:.82;font-size:14px}
+.fuji{position:absolute;left:-1px;right:-1px;bottom:-1px;width:calc(100% + 2px);height:70px;display:block;z-index:1}
+.fuji .m{fill:var(--bg)} .fuji .n{fill:#D5E3F6}
+.fuji .r{fill:none;stroke:rgba(255,255,255,.22);stroke-width:1.4}
+main{position:relative;z-index:1;padding:4px 18px calc(110px + var(--safe-b));max-width:620px;margin:0 auto}
+.intro{font-size:14.5px;color:var(--mute);margin:18px 2px 20px}
+.intro b{color:var(--ink);font-weight:700}
+.jauge{display:flex;align-items:center;gap:12px;background:var(--paper);border:1px solid var(--line);
+  border-radius:18px;padding:14px 16px;margin:0 0 24px;box-shadow:var(--sh);font-size:13.5px;color:var(--mute)}
+.jauge .barre{flex:1;height:8px;border-radius:99px;background:var(--line2);overflow:hidden}
+.jauge .barre i{display:block;height:100%;border-radius:99px;width:0;
+  background:linear-gradient(90deg,var(--kin),var(--matcha));transition:width .5s var(--ease)}
+.jauge b{color:var(--ink);font-weight:700}
+h2.sec{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-size:23px;font-weight:700;margin:30px 2px 4px}
+.sceau{flex:none;width:34px;height:34px;border-radius:11px;display:grid;place-items:center;
+  background:color-mix(in srgb,currentColor 14%,transparent);
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,currentColor 18%,transparent)}
+.sceau svg{width:19px;height:19px;display:block}
+.sceau.s-bil{color:var(--kaki)} .sceau.s-pts{color:var(--ai2)}
+.sub{color:var(--mute);font-size:13.5px;margin:0 2px 16px}
+.carte{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:15px 17px;
+  margin-bottom:11px;box-shadow:var(--sh)}
+.carte.fait{border-color:color-mix(in srgb,var(--matcha) 42%,transparent);
+  background:color-mix(in srgb,var(--matcha) 6%,var(--paper))}
+.carte h3{font-size:15.5px;font-weight:700;line-height:1.35}
+.carte .quand{font-size:12.5px;color:var(--mute);margin-top:3px}
+.carte .pourquoi{font-size:13px;color:var(--mute);margin-top:7px;line-height:1.45}
+.choix{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.choix button{font:600 13.5px var(--sans);padding:9px 15px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--line);background:var(--paper2);color:var(--mute);transition:all .18s var(--ease)}
+.choix button:active{transform:scale(.94)}
+.choix button[aria-pressed="true"]{color:#fff;border-color:transparent}
+.choix button[data-v="oui"][aria-pressed="true"]{background:linear-gradient(135deg,var(--matcha),#8FAE7C)}
+.choix button[data-v="non"][aria-pressed="true"]{background:linear-gradient(135deg,var(--momiji),var(--kaki))}
+.choix button[data-v="?"][aria-pressed="true"]{background:linear-gradient(135deg,var(--ai),var(--ai2))}
+textarea{width:100%;margin-top:10px;font:400 13.5px/1.5 var(--sans);color:var(--ink);background:var(--paper2);
+  border:1px solid var(--line);border-radius:13px;padding:10px 12px;resize:vertical;min-height:40px}
+textarea::placeholder{color:var(--mute)}
+textarea:focus{outline:2px solid color-mix(in srgb,var(--ai2) 45%,transparent);outline-offset:1px}
+.barreBas{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:12px 18px calc(12px + var(--safe-b));
+  background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line)}
+.barreBas .dedans{max-width:620px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:9px;font:700 15px var(--sans);
+  padding:15px 20px;border-radius:999px;border:0;cursor:pointer;text-decoration:none;
+  background:linear-gradient(135deg,var(--momiji),var(--kaki));color:#fff;
+  box-shadow:0 8px 20px -9px rgba(210,82,47,.85);transition:transform .18s}
+.btn:active{transform:scale(.97)}
+.btn svg{width:18px;height:18px}
+.etat{font-size:12px;color:var(--mute);text-align:center;margin:9px 0 0;min-height:15px}
+.pied{margin-top:30px;font-size:12.5px;color:var(--mute);text-align:center;line-height:1.6}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <span class="glow"></span>
+  <div class="in">
+    <h1>To-do Selma</h1>
+    <p>Merci&nbsp;! Il reste quelques trucs à confirmer pour le Japon.</p>
+  </div>
+  <svg class="fuji" viewBox="0 0 390 70" preserveAspectRatio="none" aria-hidden="true">
+    <path class="r" d="M-2 59 Q75 57 125 42 Q165 20 187 10 Q195 5.5 203 10 Q225 20 265 42 Q315 57 392 59"/>
+    <path class="m" d="M-2 70V59 Q75 57 125 42 Q165 20 187 10 Q195 5.5 203 10 Q225 20 265 42 Q315 57 392 59 V70Z"/>
+    <path class="n" d="M161 23.5 Q176 15 187 10 Q195 5.5 203 10 Q214 15 229 23.5
+      L223 20.4 L218 25.6 L212 21.3 L206.5 27 L201 21.8 L196 25.1 L190.5 20.9 L185 26.5
+      L179.5 21.5 L174 24.7 L168 21.1 L163.5 24.2Z"/>
+  </svg>
+</header>
+
+<main>
+  <p class="intro">Tes réponses <b>s'enregistrent toutes seules</b> sur ton téléphone au fur et à mesure — tu peux fermer la page et revenir plus tard. Quand tu as fini, le bouton en bas prépare un message récapitulatif à envoyer à Selma. <b>Les billets eux-mêmes</b>, joins-les simplement au message.</p>
+
+  <div class="jauge"><div class="barre"><i id="barre"></i></div><span id="compte"></span></div>
+
+  <h2 class="sec"><span class="sceau s-bil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V7a1.6 1.6 0 0 1 1.6-1.6h12.8A1.6 1.6 0 0 1 20 7v2a2.4 2.4 0 0 0 0 6v2a1.6 1.6 0 0 1-1.6 1.6H5.6A1.6 1.6 0 0 1 4 17v-2a2.4 2.4 0 0 0 0-6z"/><path d="M14.2 6.2v1.6M14.2 11.2v1.6M14.2 16.2v1.6"/></svg></span>Les billets</h2>
+  <p class="sub">Coche ce que tu as déjà en main.</p>
+  <div id="billets"></div>
+
+  <h2 class="sec"><span class="sceau s-pts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M9.2 9.2a2.9 2.9 0 1 1 3.9 2.7c-.7.3-1.1 1-1.1 1.7v.6"/><path d="M12 18.2h.01"/><circle cx="12" cy="12" r="9.2"/></svg></span>Les points à trancher</h2>
+  <p class="sub">Oui, non, ou « je ne sais pas » — et un mot si tu veux préciser.</p>
+  <div id="points"></div>
+
+  <div class="carte" id="brut" hidden>
+    <h3>Ton récapitulatif</h3>
+    <div class="pourquoi">Ton téléphone n'a pas voulu ouvrir le partage. Copie ce texte et colle-le dans ton message.</div>
+    <textarea id="brutTexte" readonly rows="12" style="margin-top:12px"></textarea>
+  </div>
+
+  <p class="pied">Rien de tout ça ne part automatiquement : tant que tu n'as pas touché le bouton, tes réponses restent sur ton téléphone.</p>
+</main>
+
+<div class="barreBas">
+  <div class="dedans">
+    <button class="btn" id="envoyer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2.5 11 13M21.5 2.5l-6.8 19-3.7-8.5L2.5 9.3z"/></svg>
+      Tout envoyer à Selma
+    </button>
+  </div>
+  <p class="etat" id="etat"></p>
+</div>
+
+<script src="data.js"></script>
+<script>
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); };
+  var CLE = 'japon.todo.selma';
+
+  // Les billets viennent de data.js : la liste reste juste quand le voyage bouge.
+  var fLong = new Intl.DateTimeFormat('fr-FR', {day:'numeric', month:'long'});
+  var BILLETS = (typeof ACTIVITES !== 'undefined' ? ACTIVITES : [])
+    .filter(function (a) { return a.billet; })
+    .map(function (a) {
+      return { id: 'b-' + a.date + '-' + a.titre.replace(/[^a-zA-Z0-9]+/g, '').slice(0, 20),
+               titre: a.titre, quand: fLong.format(new Date(a.date + 'T00:00:00')) };
+    });
+
+  var POINTS = [
+    {id:'p1',  q:"Le logement de Tokyo du 14 au 17, c'est bien la Villa Roppongi ?", d:"Le carnet parle d'un « 26 » à 8 min de la station, pour 5 personnes."},
+    {id:'p2',  q:"La nuit du 18 à Kawaguchiko est-elle réservée ?", d:"La réservation du Fujisan Kingyo ne couvre que le 19 au 20."},
+    {id:'p3',  q:"À Kyoto du 20 au 25, on garde le Rokuhara Inn ?", d:"Il y a deux réservations en parallèle : Daiya Ryokan et Rokuhara Inn."},
+    {id:'p4',  q:"Les journées du 16 et du 17 octobre sont-elles bien inversées ?", d:"Palais impérial le samedi 17 : ses jardins ferment le lundi et le vendredi."},
+    {id:'p5',  q:"Syan est-il bien sur la réservation du vol retour ?", d:"La capture ne montrait que le passager 1."},
+    {id:'p6',  q:"Selma a-t-elle sa propre réservation sur le vol aller ?", d:"Le billet AF186 vu est au nom d'une autre Selma."},
+    {id:'p7',  q:"Le vol Narita → Hanoï dure-t-il 4 h 15 ?", d:"09h30 → 13h45 avec 2 h de décalage donne 4 h 15, alors que le carnet dit 6 h 15."},
+    {id:'p8',  q:"Le « Naruto Park » du 19, c'est bien ce nom-là ?", d:"Je ne l'ai pas trouvé avec certitude du côté de Kawaguchiko."},
+    {id:'p9',  q:"Le « 30-40 » noté pour Universal, ce sont des minutes de trajet ?", d:"Ça pourrait aussi être un nombre d'attractions."},
+    {id:'p10', q:"Le Jidai Matsuri part-il bien du Palais impérial vers midi ?", d:"Le 22 octobre, à confirmer sur le programme de l'année."},
+    {id:'p11', q:"Quel Round One à Osaka ?", d:"Il y en a plusieurs : Sennichimae, Umeda…", libre:true},
+    {id:'p12', q:"Le voyage se termine bien le 3 novembre ?", d:"Stippl affiche le voyage jusqu'au 6 novembre."}
+  ];
+
+  var etat = {};
+  try { etat = JSON.parse(localStorage.getItem(CLE) || '{}') || {}; } catch (e) { etat = {}; }
+  var garder = function () { try { localStorage.setItem(CLE, JSON.stringify(etat)); } catch (e) {} };
+
+  function rendre() {
+    $('#billets').innerHTML = BILLETS.map(function (b) {
+      var ok = etat[b.id] === 'oui';
+      return '<div class="carte' + (ok ? ' fait' : '') + '" data-c="' + b.id + '">' +
+        '<h3>' + esc(b.titre) + '</h3><div class="quand">' + esc(b.quand) + '</div>' +
+        '<div class="choix"><button type="button" data-id="' + b.id + '" data-v="oui" aria-pressed="' + ok + '">Je l’ai</button>' +
+        '<button type="button" data-id="' + b.id + '" data-v="non" aria-pressed="' + (etat[b.id] === 'non') + '">Pas encore</button></div></div>';
+    }).join('') || '<div class="carte"><h3>Aucun billet à suivre pour l’instant.</h3></div>';
+
+    $('#points').innerHTML = POINTS.map(function (p) {
+      var r = etat[p.id], fait = p.libre ? !!(etat[p.id + '-n'] || '').trim() : !!r;
+      var boutons = p.libre ? '' : '<div class="choix">' +
+        ['oui','non','?'].map(function (v) {
+          return '<button type="button" data-id="' + p.id + '" data-v="' + v + '" aria-pressed="' + (r === v) + '">' +
+            (v === 'oui' ? 'Oui' : v === 'non' ? 'Non' : 'Je ne sais pas') + '</button>'; }).join('') + '</div>';
+      return '<div class="carte' + (fait ? ' fait' : '') + '" data-c="' + p.id + '">' +
+        '<h3>' + esc(p.q) + '</h3><div class="pourquoi">' + esc(p.d) + '</div>' + boutons +
+        '<textarea data-note="' + p.id + '" placeholder="' + (p.libre ? 'Ta réponse…' : 'Une précision ? (facultatif)') + '">' +
+        esc(etat[p.id + '-n'] || '') + '</textarea></div>';
+    }).join('');
+
+    var total = BILLETS.length + POINTS.length;
+    var faits = BILLETS.filter(function (b) { return etat[b.id]; }).length +
+                POINTS.filter(function (p) { return p.libre ? (etat[p.id + '-n'] || '').trim() : etat[p.id]; }).length;
+    $('#barre').style.width = total ? (faits / total * 100) + '%' : '0';
+    $('#compte').innerHTML = '<b>' + faits + '</b> sur ' + total + ' renseigné' + (faits > 1 ? 's' : '');
+  }
+
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest('button[data-id]');
+    if (!b) return;
+    var id = b.dataset.id;
+    etat[id] = (etat[id] === b.dataset.v) ? undefined : b.dataset.v;   // re-toucher annule
+    if (etat[id] === undefined) delete etat[id];
+    garder();
+    var y = window.scrollY; rendre(); window.scrollTo(0, y);
+  });
+  document.addEventListener('input', function (ev) {
+    var t = ev.target.closest('textarea[data-note]');
+    if (!t) return;
+    etat[t.dataset.note + '-n'] = t.value; garder();
+    var p = POINTS.filter(function (x) { return x.id === t.dataset.note; })[0];
+    if (p && p.libre) t.closest('.carte').classList.toggle('fait', !!t.value.trim());
+    var total = BILLETS.length + POINTS.length;
+    var faits = BILLETS.filter(function (b) { return etat[b.id]; }).length +
+                POINTS.filter(function (p) { return p.libre ? (etat[p.id + '-n'] || '').trim() : etat[p.id]; }).length;
+    $('#barre').style.width = (faits / total * 100) + '%';
+    $('#compte').innerHTML = '<b>' + faits + '</b> sur ' + total + ' renseigné' + (faits > 1 ? 's' : '');
+  });
+
+  function recap() {
+    var L = ['To-do Selma — Japon 2026', 'Mis à jour le ' + new Date().toLocaleDateString('fr-FR'), ''];
+    L.push('BILLETS');
+    BILLETS.forEach(function (b) {
+      var r = etat[b.id];
+      L.push((r === 'oui' ? '[x] ' : r === 'non' ? '[ ] ' : '[?] ') + b.titre + ' — ' + b.quand);
+    });
+    L.push('', 'POINTS À TRANCHER');
+    POINTS.forEach(function (p) {
+      var r = etat[p.id], n = (etat[p.id + '-n'] || '').trim();
+      var rep = p.libre ? (n || 'pas encore répondu')
+              : (r === 'oui' ? 'OUI' : r === 'non' ? 'NON' : r === '?' ? 'je ne sais pas' : 'pas encore répondu');
+      L.push('• ' + p.q);
+      L.push('  → ' + rep + (!p.libre && n ? ' — ' + n : ''));
+    });
+    L.push('', 'Les billets suivent dans la conversation.');
+    return L.join('\n');
+  }
+
+  $('#envoyer').addEventListener('click', function () {
+    var texte = recap();
+    var dire = function (m) { $('#etat').textContent = m; setTimeout(function () { $('#etat').textContent = ''; }, 4000); };
+    if (navigator.share) {
+      navigator.share({title: 'To-do Selma — Japon 2026', text: texte})
+        .then(function () { dire('Envoyé, merci !'); })
+        .catch(function (e) { if (e && e.name !== 'AbortError') dire('Envoi annulé'); });
+      return;
+    }
+    var montrer = function (m) {
+      var z = $('#brutTexte'); z.value = texte; $('#brut').hidden = false;
+      $('#brut').scrollIntoView({block: 'center', behavior: 'smooth'});
+      z.focus(); z.setSelectionRange(0, z.value.length); dire(m);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texte).then(
+        function () { dire('Récapitulatif copié — colle-le dans ton message'); },
+        function () { montrer('Copie refusée : le texte est en bas, déjà sélectionné'); });
+    } else { montrer('Le texte est en bas, déjà sélectionné'); }
+  });
+
+  rendre();
+})();
+</script>
+</body>
+</html>
