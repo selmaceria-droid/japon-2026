@@ -97,6 +97,8 @@ button{font:inherit}
 @keyframes ping{0%{box-shadow:0 0 0 0 rgba(224,169,68,.6)}70%{box-shadow:0 0 0 9px rgba(224,169,68,0)}100%{box-shadow:0 0 0 0 rgba(224,169,68,0)}}
 .fuji{position:absolute;left:-1px;right:-1px;bottom:-1px;width:calc(100% + 2px);height:76px;display:block;z-index:1}
 .fuji .m{fill:var(--bg)}
+/* la neige reste claire dans les deux modes : elle fait lire la montagne */
+.fuji .n{fill:#D5E3F6}
 .fuji .r{fill:none;stroke:rgba(255,255,255,.22);stroke-width:1.4}
 
 /* ======================= mise en page ======================= */
@@ -347,8 +349,11 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
     </div>
   </div>
   <svg class="fuji" viewBox="0 0 390 76" preserveAspectRatio="none" aria-hidden="true">
-    <path class="r" d="M-2 64 Q62 62 112 46 Q152 22 174 11 Q182 6.5 190 11 Q214 23 256 46 Q308 62 392 64"/>
-    <path class="m" d="M-2 76V64Q62 62 112 46 152 22 174 11q8-4.5 16 0Q214 23 256 46q52 16 136 18v12z"/>
+    <path class="r" d="M-2 64 Q75 62 125 46 Q165 22 187 11 Q195 6.5 203 11 Q225 22 265 46 Q315 62 392 64"/>
+    <path class="m" d="M-2 76V64 Q75 62 125 46 Q165 22 187 11 Q195 6.5 203 11 Q225 22 265 46 Q315 62 392 64 V76Z"/>
+    <path class="n" d="M160.5 25.3 Q176 16.5 187 11 Q195 6.5 203 11 Q214 16.5 229.5 25.3
+      L223 22 L218 27.5 L212 23 L206.5 29 L201 23.5 L196 27 L190.5 22.5 L185 28.5
+      L179.5 23.2 L174 26.6 L168 22.8 L163.5 26Z"/>
   </svg>
 </header>
 

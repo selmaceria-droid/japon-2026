@@ -62,7 +62,7 @@ modifiez → Commit changes. L'app se met à jour à la prochaine ouverture
 avec du réseau.
 
 Si une modification ne s'affiche pas : ouvrez sw.js et changez
-'japon-v12' en 'japon-v13'. Cela force le rafraîchissement.
+'japon-v13' en 'japon-v14'. Cela force le rafraîchissement.
 
 
 LES APPS SUR PLACE
