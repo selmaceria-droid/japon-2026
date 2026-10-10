@@ -1,6 +1,6 @@
 // Garde l'app disponible hors ligne (métro, avion…).
 // Changez VERSION à chaque mise à jour pour forcer le rafraîchissement.
-const VERSION = 'japon-v16';
+const VERSION = 'japon-v17';
 const FILES = ['./', 'index.html', 'installer.html', 'selma.html', 'app.js', 'data.js', 'icones-apps.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', e => e.waitUntil(
@@ -20,8 +20,11 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const local = new URL(req.url).origin === self.location.origin;
+  // 'no-cache' = on redemande au serveur avec un « si modifié depuis » : c'est
+  // peu coûteux (304 si rien n'a bougé) et ça évite que GitHub Pages serve
+  // pendant dix minutes une version périmée après une mise à jour.
   e.respondWith(
-    fetch(req)
+    fetch(local ? new Request(req, {cache: 'no-cache'}) : req)
       .then(r => {
         if (local && r.ok) { const c = r.clone(); caches.open(VERSION).then(x => x.put(req, c)).catch(() => {}); }
         return r;
