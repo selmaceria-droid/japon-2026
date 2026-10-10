@@ -1,6 +1,6 @@
 // Garde l'app disponible hors ligne (métro, avion…).
 // Changez VERSION à chaque mise à jour pour forcer le rafraîchissement.
-const VERSION = 'japon-v13';
+const VERSION = 'japon-v14';
 const FILES = ['./', 'index.html', 'installer.html', 'app.js', 'data.js', 'icones-apps.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', e => e.waitUntil(
