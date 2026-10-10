@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2C3A63" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141C33" media="(prefers-color-scheme: dark)">
+<title>Installer Japon 2026</title>
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --momiji:#D2522F; --kaki:#E07A3E; --kin:#E0A944; --ai:#2C3A63; --ai2:#44548A;
+  --matcha:#7D9A6D; --sakura:#E79BB0;
+  --bg:#FBF6F0; --bg2:#F3EADF; --paper:#FFF; --paper2:#FFFCF8;
+  --ink:#2B2320; --mute:#8C8077; --line:#EDE2D6; --line2:#F5EDE3;
+  --sh:0 1px 2px rgba(74,48,28,.05), 0 6px 18px -10px rgba(74,48,28,.20);
+  --serif:"Shippori Mincho","Hiragino Mincho ProN",Georgia,serif;
+  --sans:"Zen Kaku Gothic New",-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --safe-t:env(safe-area-inset-top,0px); --safe-b:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#14100E; --bg2:#1C1613; --paper:#211A17; --paper2:#271F1A;
+  --ink:#F2E9E1; --mute:#A3948A; --line:#352A24; --line2:#2A211C;
+  --ai:#3C4C82; --ai2:#5465A2; --momiji:#E4693F; --kin:#E8B757;
+  --sh:0 1px 2px rgba(0,0,0,.45), 0 6px 18px -10px rgba(0,0,0,.6);
+}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);background-image:radial-gradient(1100px 520px at 50% -8%,var(--bg2),transparent 70%);
+  background-attachment:fixed;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0}
+.top{position:relative;overflow:hidden;padding:calc(var(--safe-t) + 32px) 22px 72px;color:#fff;
+  background:linear-gradient(155deg,#2C3A63 0%,#3C3C6E 42%,#7A3B55 100%)}
+@media (prefers-color-scheme:dark){.top{background:linear-gradient(155deg,#151D38 0%,#241F44 45%,#4A2437 100%)}}
+.top .glow{position:absolute;width:300px;height:300px;right:-110px;top:-130px;border-radius:50%;
+  background:radial-gradient(circle,#E8853C 0%,transparent 68%);opacity:.6}
+.top .in{position:relative;z-index:2;max-width:620px;margin:0 auto;display:flex;align-items:center;gap:16px}
+.top img{width:62px;height:62px;border-radius:15px;flex:none;box-shadow:0 8px 20px -8px rgba(0,0,0,.6)}
+.top h1{font-family:var(--serif);font-weight:700;font-size:clamp(25px,7.4vw,32px);line-height:1.1}
+.top p{margin:5px 0 0;opacity:.8;font-size:13.5px}
+.fuji{position:absolute;left:-1px;right:-1px;bottom:-1px;width:calc(100% + 2px);height:70px;display:block;z-index:1}
+.fuji .m{fill:var(--bg)} .fuji .r{fill:none;stroke:rgba(255,255,255,.22);stroke-width:1.4}
+main{position:relative;z-index:1;padding:4px 18px calc(40px + var(--safe-b));max-width:620px;margin:0 auto}
+.intro{font-size:15px;color:var(--mute);margin:18px 2px 24px}
+.intro b{color:var(--ink);font-weight:700}
+.etape{display:grid;grid-template-columns:40px 1fr;gap:0 15px;background:var(--paper);border:1px solid var(--line);
+  border-radius:22px;padding:17px 19px;margin-bottom:12px;box-shadow:var(--sh)}
+.num{grid-row:1/4;width:40px;height:40px;border-radius:13px;display:grid;place-items:center;flex:none;
+  font-family:var(--serif);font-size:19px;font-weight:700;color:#fff;
+  background:linear-gradient(140deg,var(--momiji),var(--kaki))}
+.etape h3{font-size:17px;font-weight:700;line-height:1.3;align-self:center}
+.etape p{margin:7px 0 0;font-size:14px;color:var(--mute)}
+.etape .montre{margin-top:12px;display:inline-flex;align-items:center;gap:9px;font-size:13px;font-weight:500;
+  background:var(--line2);border-radius:12px;padding:9px 13px;color:var(--ink)}
+.etape .montre svg{width:21px;height:21px;flex:none;color:var(--ai2)}
+.note{display:flex;gap:11px;align-items:flex-start;border-radius:18px;padding:14px 16px;margin:0 0 22px;
+  font-size:14px;line-height:1.5;border:1px solid}
+.note svg{width:19px;height:19px;flex:none;margin-top:2px}
+.note.attention{color:var(--kaki);border-color:color-mix(in srgb,var(--kaki) 32%,transparent);
+  background:color-mix(in srgb,var(--kaki) 9%,transparent)}
+.note.ok{color:var(--matcha);border-color:color-mix(in srgb,var(--matcha) 32%,transparent);
+  background:color-mix(in srgb,var(--matcha) 10%,transparent)}
+.note b{display:block;color:inherit;font-weight:700;margin-bottom:2px}
+.fin{text-align:center;margin-top:26px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:600 15px var(--sans);
+  padding:14px 24px;border-radius:999px;border:0;cursor:pointer;text-decoration:none;
+  background:linear-gradient(135deg,var(--momiji),var(--kaki));color:#fff;
+  box-shadow:0 8px 20px -9px rgba(210,82,47,.85);transition:transform .18s}
+.btn:active{transform:scale(.95)}
+.btn svg{width:17px;height:17px}
+.lien{margin-top:16px;font-size:12.5px;color:var(--mute);word-break:break-all}
+.lien button{background:none;border:0;color:var(--ai2);font:500 12.5px var(--sans);cursor:pointer;
+  text-decoration:underline;padding:0;margin-top:7px;display:block;width:100%}
+.pied{margin-top:30px;font-size:12.5px;color:var(--mute);text-align:center;line-height:1.6}
+</style>
+</head>
+<body>
+<header class="top">
+  <span class="glow"></span>
+  <div class="in">
+    <img src="icon-192.png" alt="">
+    <div><h1>Japon 2026</h1><p>L'app du voyage, à poser sur ton écran d'accueil</p></div>
+  </div>
+  <svg class="fuji" viewBox="0 0 390 70" preserveAspectRatio="none" aria-hidden="true">
+    <path class="r" d="M-2 59 Q62 57 112 42 Q152 20 174 10 Q182 6 190 10 Q214 21 256 42 Q308 57 392 59"/>
+    <path class="m" d="M-2 70V59Q62 57 112 42 152 20 174 10q8-4 16 0Q214 21 256 42q52 15 136 17v11z"/>
+  </svg>
+</header>
+
+<main>
+  <p class="intro">Ce n'est pas une app de l'App Store : c'est une page web qu'on <b>ajoute à l'écran d'accueil</b>. Elle s'ouvre ensuite en plein écran comme une vraie app, et <b>marche sans réseau</b> — pratique dans le métro de Tokyo ou en avion. Rien à installer, rien à payer, aucun compte.</p>
+
+  <div id="etat"></div>
+  <div id="pas"></div>
+
+  <div class="fin">
+    <a class="btn" href="./" id="ouvrir">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12.5 5.5 19 12l-6.5 6.5"/></svg>
+      Ouvrir l'app
+    </a>
+    <div class="lien">
+      <span id="url"></span>
+      <button id="copier">Copier le lien pour le partager</button>
+    </div>
+  </div>
+
+  <p class="pied">Sur Android, c'est le menu <b>⋮</b> du navigateur puis « Installer l'application ».<br>Sur ordinateur, la page s'ouvre normalement, sans installation.</p>
+</main>
+
+<script>
+(function () {
+  var ua = navigator.userAgent;
+  var installee = window.navigator.standalone === true ||
+    (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+  var dansUneApp = /FBAN|FBAV|Instagram|Line\/|MicroMessenger|Snapchat|LinkedInApp|Twitter/i.test(ua);
+  var lienApp = new URL('./', location.href).href;
+  document.getElementById('url').textContent = lienApp;
+
+  var ICO = {
+    partage: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15.4V3.4M8.5 6.9 12 3.4l3.5 3.5"/><path d="M7.4 10.4H5.9a2.3 2.3 0 0 0-2.3 2.3v6.9a2.3 2.3 0 0 0 2.3 2.3h12.2a2.3 2.3 0 0 0 2.3-2.3v-6.9a2.3 2.3 0 0 0-2.3-2.3h-1.5"/></svg>',
+    plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.4" y="3.4" width="17.2" height="17.2" rx="4.6"/><path d="M12 8.1v7.8M8.1 12h7.8"/></svg>',
+    safari: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.6 8.4-1.9 5.3-5.3 1.9 1.9-5.3z"/></svg>',
+    alerte: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6 1.9 20.4h20.2z"/><path d="M12 9.6v4.6M12 17.4h.01"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.6 5 5 10-11"/></svg>'
+  };
+
+  if (installee) {
+    document.getElementById('etat').innerHTML =
+      '<div class="note ok">' + ICO.check + '<div><b>C’est déjà fait</b>Tu es dans l’app, lancée depuis ton écran d’accueil. Rien à faire de plus.</div></div>';
+    document.getElementById('ouvrir').textContent = 'Revenir au voyage';
+    return;
+  }
+
+  if (dansUneApp) {
+    document.getElementById('etat').innerHTML =
+      '<div class="note attention">' + ICO.alerte + '<div><b>Ouvre ce lien dans Safari</b>Tu es dans le navigateur intégré d’une autre application, qui ne sait pas ajouter à l’écran d’accueil. Touche les trois points en haut à droite, puis « Ouvrir dans Safari ».</div></div>';
+  }
+
+  var pas = [
+    ['Ouvre cette page dans Safari', 'Le bouton d’ajout n’existe que dans Safari. Ni Chrome, ni le navigateur d’Instagram ou de WhatsApp.', ICO.safari, 'Safari'],
+    ['Touche le bouton Partager', 'Le carré avec la flèche vers le haut, en bas de l’écran. S’il a disparu, fais défiler la page vers le haut.', ICO.partage, 'Partager'],
+    ['Choisis « Sur l’écran d’accueil »', 'Fais défiler la liste jusqu’à cette ligne, puis touche « Ajouter » en haut à droite.', ICO.plus, 'Sur l’écran d’accueil'],
+    ['C’est installé', 'La feuille d’érable apparaît sur ton écran d’accueil. Ouvre-la une fois avec du réseau : elle se met en mémoire et fonctionnera ensuite hors ligne.', '', '']
+  ];
+  document.getElementById('pas').innerHTML = pas.map(function (p, i) {
+    return '<div class="etape"><span class="num">' + (i + 1) + '</span><h3>' + p[0] + '</h3>' +
+      '<p>' + p[1] + '</p>' +
+      (p[2] ? '<span class="montre">' + p[2] + p[3] + '</span>' : '') + '</div>';
+  }).join('');
+
+  document.getElementById('copier').addEventListener('click', function () {
+    var b = this;
+    var dire = function (m) { b.textContent = m; setTimeout(function () { b.textContent = 'Copier le lien pour le partager'; }, 2600); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(lienApp).then(function () { dire('Lien copié ✓'); }, function () { dire('Copie refusée, sélectionne le lien à la main'); });
+    } else { dire('Copie refusée, sélectionne le lien à la main'); }
+  });
+})();
+</script>
+</body>
+</html>

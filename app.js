@@ -492,5 +492,17 @@ addEventListener('load', () => {
 });
 let redim; addEventListener('resize', () => { clearTimeout(redim); redim = setTimeout(feuillage, 400); });
 
+/* ---------- rappel d'installation ----------
+   Visible seulement pour qui ouvre le lien dans un navigateur :
+   une fois l'app sur l'écran d'accueil, elle disparaît. */
+(() => {
+  const posee = window.navigator.standalone === true || matchMedia('(display-mode: standalone)').matches;
+  if (posee) return;
+  document.querySelector('main').insertAdjacentHTML('beforeend',
+    `<a class="installe" href="installer.html">${I.photo.replace(I.photo, '')}
+      <span><b>Ajoute l'app à ton écran d'accueil</b>Elle s'ouvrira en plein écran et marchera sans réseau.</span>
+      ${I.fleche.replace('<svg ', '<svg class="f" ')}</a>`);
+})();
+
 /* ---------- hors ligne ---------- */
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');

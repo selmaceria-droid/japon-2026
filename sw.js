@@ -1,7 +1,7 @@
 // Garde l'app disponible hors ligne (métro, avion…).
 // Changez VERSION à chaque mise à jour pour forcer le rafraîchissement.
-const VERSION = 'japon-v11';
-const FILES = ['./', 'index.html', 'app.js', 'data.js', 'icones-apps.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
+const VERSION = 'japon-v12';
+const FILES = ['./', 'index.html', 'installer.html', 'app.js', 'data.js', 'icones-apps.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', e => e.waitUntil(
   caches.open(VERSION).then(c => c.addAll(FILES)).then(() => self.skipWaiting())
