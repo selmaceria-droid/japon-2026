@@ -1,0 +1,137 @@
+APP « JAPON 2026 » — mise en ligne gratuite, sur vos comptes perso
+==================================================================
+
+Les fichiers de ce dossier forment une PWA : un site web qu'on ajoute à
+l'écran d'accueil de l'iPhone. Il s'ouvre en plein écran comme une vraie
+app et fonctionne hors ligne (métro, avion). Ni App Store, ni serveur,
+ni abonnement.
+
+
+A. METTRE EN LIGNE — GitHub Pages (recommandé, 10 min)
+------------------------------------------------------
+Avantage : on peut modifier data.js directement depuis le navigateur,
+même depuis le téléphone, et l'app se met à jour toute seule.
+
+1. Compte GitHub PERSO, gratuit : https://github.com/signup
+   (avec votre adresse perso, pas celle de Billy)
+
+2. Bouton « New » → nom : japon-2026 → Public → Create repository.
+   Public est obligatoire pour l'hébergement gratuit.
+   => Ne mettez donc JAMAIS dans data.js : numéro ou code de réservation,
+      numéro de billet, numéro de téléphone, adresse e-mail, prix payés.
+      Les numéros de vol et les noms d'hôtels y sont, eux, sans risque.
+
+3. « uploading an existing file » → glissez TOUS les fichiers de ce
+   dossier (index.html, app.js, data.js, icones-apps.js, sw.js,
+   manifest.webmanifest, icon-192.png, icon-512.png) → Commit changes.
+
+4. Settings → Pages → Branch : main / (root) → Save.
+   Au bout d'1 à 2 min l'adresse s'affiche :
+   https://VOTRE-PSEUDO.github.io/japon-2026/
+
+5. Sur l'iPhone : ouvrez l'adresse dans Safari → bouton Partager →
+   « Sur l'écran d'accueil ». Envoyez le lien à votre copain pour
+   qu'il fasse pareil.
+
+
+B. METTRE EN LIGNE — Netlify Drop (2 min, si vous voulez du privé)
+------------------------------------------------------------------
+https://app.netlify.com/drop → glissez le dossier → adresse HTTPS
+immédiate. Compte gratuit pour la garder. Le code n'est pas public,
+mais pour modifier le contenu il faut reglisser le dossier entier.
+
+
+MODIFIER LE CONTENU
+-------------------
+Tout est dans data.js : les étapes (avec le détail des trajets), les
+activités, la météo.
+
+Les champs d'une activité :
+  date, heure, duree (minutes), titre, adresse, note
+  tz      : fuseau si ce n'est pas Tokyo ("Europe/Paris", "Asia/Ho_Chi_Minh")
+  vol     : code OACI, pour le bouton de suivi FlightAware (AFR186, HVN19...)
+  marche  : 0 aucune, 1 léger, 2 on arpente, 3 ça grimpe. Plus haut pour
+            une journée entière au même endroit. La jauge du jour en est
+            la somme : 0 Repos, 1-2 Tranquille, 3-5 Modérée, 6-8 Soutenue,
+            9+ Grosse journée.
+  billet  : "attendu" (Selma doit l'envoyer) ou "pris" (on l'a).
+            Le billet lui-même reste dans le Wallet ou la boîte mail :
+            un QR code ou un numéro de billet n'a rien à faire dans un
+            dépôt public. Sur GitHub : ouvrez data.js → icône crayon →
+modifiez → Commit changes. L'app se met à jour à la prochaine ouverture
+avec du réseau.
+
+Si une modification ne s'affiche pas : ouvrez sw.js et changez
+'japon-v11' en 'japon-v12'. Cela force le rafraîchissement.
+
+
+LES APPS SUR PLACE
+------------------
+Le 5e onglet liste les applications du voyage, avec en titre ce à quoi
+elles servent. Un appui essaie d'ouvrir l'app installée, et bascule sur
+l'App Store au bout d'une seconde s'il ne se passe rien.
+
+Les éditeurs ne documentent pas leurs « schémas d'ouverture ». Ceux qui
+portent la pastille « ouverture à tester » sont des suppositions. Pour
+en vérifier un : tapez-le dans la barre d'adresse de Safari (par exemple
+suica://). Si l'app s'ouvre, enlevez aVerifier dans data.js ; sinon,
+videz le champ schema. De toute façon l'app apprend : un schéma qui
+échoue une fois n'est plus réessayé sur ce téléphone.
+
+Les icônes sont embarquées dans icones-apps.js, pour que l'onglet reste
+lisible hors ligne. Pour ajouter une app, prenez son numéro dans le lien
+App Store (apps.apple.com/fr/app/idXXXXXXXX) et demandez-moi l'icône.
+
+
+L'ALBUM PARTAGÉ
+---------------
+Le 4e onglet ouvre l'album iCloud partagé. Apple interdit d'afficher un
+album iCloud à l'intérieur d'un autre site (X-Frame-Options), donc
+l'app l'ouvre plutôt que de l'intégrer : sur iPhone, le lien bascule
+directement dans l'app Photos.
+
+⚠ Ce lien suffit pour voir l'album ET pour y déposer des photos. Dans un
+dépôt GitHub public, il est lisible par qui tombe sur le dépôt. Si ça
+gêne, deux options : retirer ALBUM de data.js, ou héberger sur Netlify
+Drop, qui garde le code privé.
+
+
+LES JOURS PASSÉS
+----------------
+Au fil du voyage, chaque journée écoulée se replie toute seule dans un
+tiroir « jours passés », en haut de chacun des trois onglets. Un jour
+bascule à 6 h du matin le lendemain, à l'heure du téléphone : le 17 reste
+donc affiché toute la nuit du 17 au 18, et disparaît le 18 à 6 h. Comme
+c'est l'horloge du téléphone, ça suit le fuseau où vous êtes.
+
+Pour voir l'app comme si on était un autre jour, ajoutez ?jour=2026-10-22
+à la fin de l'adresse. Pratique pour vérifier une journée à l'avance.
+
+
+LES NOTIFICATIONS
+-----------------
+Elles passent par le calendrier du téléphone — gratuit, fiable,
+sans serveur, et ça marche même en avion.
+
+- Bouton « Tout ajouter au calendrier » (onglets Itinéraire et
+  Activités) : un seul fichier contenant les 7 étapes en journée
+  entière + toutes les activités avec une alerte 1 h avant,
+  à l'heure de Tokyo. À faire une fois, avant le départ.
+- Bouton « Rappel » sur une activité : n'ajoute que celle-là.
+
+Sur iPhone, le fichier se télécharge puis s'ouvre dans Calendrier.
+Si rien ne se passe depuis l'app en plein écran, faites-le une fois
+depuis Safari.
+
+À savoir : les « vraies » notifications push d'une PWA sont possibles
+sur iPhone depuis iOS 16.4, mais il faut un serveur qui les envoie à
+l'heure dite. C'est faisable gratuitement (Cloudflare Workers), mais
+c'est fragile pour un gain nul par rapport au calendrier.
+
+
+LA MÉTÉO
+--------
+Figée au 10 octobre 2026 : prévisions jour par jour jusqu'au 19,
+puis tendance d'après les relevés 2023-2025 de l'agence météo
+japonaise (JMA). Quelques jours avant le départ, demandez un data.js
+remis à jour.
