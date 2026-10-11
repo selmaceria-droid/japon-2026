@@ -96,10 +96,14 @@ ma branche ».
   10 oct. 2026. Source : `api.open-meteo.com`, plus JMA / Weather Company / AccuWeather.
 - **Les réponses de Selma** : elle renvoie un récapitulatif par message. Reporter
   ses oui/non dans `data.js` et basculer les `billet: "attendu"` en `"pris"`.
+  Récapitulatif du 11 oct. reporté : il reste sans réponse la durée du vol
+  Narita → Hanoï, le nom et l'adresse du logement de Tokyo (ce n'est pas la Villa
+  Roppongi), et 8 billets encore « attendus ». Sur le Jidai Matsuri elle répond
+  « non » au départ du Palais vers midi, ce qui contredit le programme habituel :
+  à recouper.
 - **Les schémas d'ouverture des apps** (`schema` dans `APPS`) marqués `aVerifier`
   sont des suppositions ; les éditeurs ne les documentent pas. Pour en tester un :
   le taper dans Safari sur l'iPhone.
-- **« Naruto Park »** (19 oct.) : nom jamais confirmé.
 - Si le planning définitif migre vers l'app **Stippl**, réaligner `data.js` dessus.
 
 ## Ton
