@@ -35,6 +35,13 @@ Les références du Rokuhara Inn et les PNR restent dans Booking, volontairement
 de stockage partagé, pas de réception de fichiers, pas de notification push. Toute
 demande qui suppose un serveur doit être redessinée, pas bricolée.
 
+**Les billets eux-mêmes (QR, captures smartEX…) ne vont jamais dans le dépôt** : un QR
+scanné, c'est quelqu'un qui monte à notre place. L'app propose « Joindre le billet »
+sur chaque activité à billet : la capture reste dans le téléphone (IndexedDB
+`japon-billets`, la même réserve que `selma.html`, clé `b-<date>-<titre>`), s'affiche
+dans Activités et dans le trajet correspondant de l'onglet Itinéraire, et s'ouvre en
+plein écran sur fond blanc pour le portique. Chacun joint les siens sur son téléphone.
+
 ## Les fichiers
 
 | Fichier | Rôle |

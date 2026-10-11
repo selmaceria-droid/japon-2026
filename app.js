@@ -20,6 +20,8 @@ const maps = q => 'https://www.google.com/maps/search/?api=1&query=' + encodeURI
 const flightaware = v => 'https://fr.flightaware.com/live/flight/' + encodeURIComponent(v);
 const route = (a, b, m) => `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(a)}&destination=${encodeURIComponent(b)}&travelmode=${m || 'transit'}`;
 const NOM = {Kawaguchiko: 'Mont Fuji · Kawaguchiko'};
+// Clé d'un billet : la même que dans selma.html, pour partager la même réserve.
+const idBillet = a => 'b-' + a.date + '-' + a.titre.replace(/[^a-zA-Z0-9]+/g, '').slice(0, 20);
 const addDays = (ymd, n) => { const d = D(ymd); d.setDate(d.getDate() + n); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
 // Replie une liste d'éléments déjà passés dans un <details>.
 function tiroir(html, n, mots) {
@@ -75,6 +77,9 @@ const I = {
   copie: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11.5" height="11.5" rx="3"/><path d="M15 6.2V6a2.5 2.5 0 0 0-2.5-2.5H6A2.5 2.5 0 0 0 3.5 6v6.5A2.5 2.5 0 0 0 6 15h.2"/></svg>',
   histo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 10.4A9 9 0 1 1 4 15.5"/><path d="M2.6 5.6v4.8h4.8M12 7.6V12l3.2 1.9"/></svg>',
   ticket: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V7a1.6 1.6 0 0 1 1.6-1.6h12.8A1.6 1.6 0 0 1 20 7v2a2.4 2.4 0 0 0 0 6v2a1.6 1.6 0 0 1-1.6 1.6H5.6A1.6 1.6 0 0 1 4 17v-2a2.4 2.4 0 0 0 0-6z"/><path d="M14.2 6.2v1.6M14.2 11.2v1.6M14.2 16.2v1.6"/></svg>',
+  plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M12 5.5v13M5.5 12h13"/></svg>',
+  croix: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg>',
+  corbeille: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9.5 7V4.8A1.3 1.3 0 0 1 10.8 3.5h2.4a1.3 1.3 0 0 1 1.3 1.3V7M6.5 7l.8 12.1a1.5 1.5 0 0 0 1.5 1.4h6.4a1.5 1.5 0 0 0 1.5-1.4L17.5 7"/></svg>',
   plane: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 10.6 3.4 8.8a.6.6 0 0 1-.2-1l1-.8a.9.9 0 0 1 .8-.2l5.7 1.1 3-3a2.3 2.3 0 0 1 3.3 3.2l-3 3 1.1 5.8a.9.9 0 0 1-.2.8l-.8 1a.6.6 0 0 1-1-.2l-1.8-6.9-2.5 2.5.3 2.3a.8.8 0 0 1-.2.6l-.6.7a.5.5 0 0 1-.9-.2L7 16.9l-1.3-.4a.5.5 0 0 1-.2-.9l.7-.6a.8.8 0 0 1 .6-.2l2.3.3z"/></svg>',
   leaf: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.2 18.2 6.95 18.13 6.54 17.36 3.3 15.59 6.98 15.42 7.69 14.91 7.6 15.06 6.13 14.21 5.66 12.71 3.39 8.36 7.57 10.94 9.03 11.51 10.14 12.87 9.49 10.32 10.24 8.06 12 2.2 13.76 8.06 14.51 10.32 13.86 12.87 14.97 11.51 16.43 10.94 20.61 8.36 18.34 12.71 17.87 14.21 16.4 15.06 16.31 14.91 17.02 15.42 20.7 15.59 17.46 17.36 17.05 18.13 15.8 18.2Z"/><path stroke="currentColor" stroke-width="1.15" stroke-linecap="round" d="M12 17.3v5"/></svg>'
 };
@@ -212,10 +217,14 @@ function wicon(k, w) {
     const quand = e.du === e.au ? fDm.format(D(e.du)) : `${fDm.format(D(e.du))} → ${fDm.format(D(e.au))}`;
     const depuis = t && t.depart ? t.depart : prec && (prec.lieu + ', Japon');
     const vers = t && t.arrivee ? t.arrivee : e.lieu + ', Japon';
+    // Les billets du trajet : les activités « transport » du jour d'arrivée (un → dans le titre).
+    const billetsJour = t ? ACTS.filter(a => a.date === e.du && a.billet && a.titre.includes('→')) : [];
+    const pieces = billetsJour.map(a => `<div class="pieces" data-pieces="${idBillet(a)}" data-cap="${esc(a.titre.split('·')[0].trim())}" data-jour="${a.date}"></div>`).join('');
     const bloc = t ? `<div class="trajet">
         <div class="mode">${I.train}<span>${esc(t.mode || 'Trajet')}${t.duree ? ' · ' + esc(t.duree) : ''}</span>${t.prix ? `<span class="tag">${esc(t.prix)}</span>` : ''}${t.aVerifier ? '<span class="tag est">à confirmer</span>' : ''}</div>
         ${t.depart || t.arrivee ? `<div class="path"><i></i>${esc(t.depart || '?')}<em>—</em><i class="end"></i>${esc(t.arrivee || '?')}</div>` : ''}
         ${[].concat(t.details || []).map(x => `<div class="det">${esc(x)}</div>`).join('')}
+        ${pieces ? `<div class="billetsTrajet">${pieces}</div>` : ''}
       </div>` : '';
     return `<div class="leg stagger" style="--i:${i}">
       <div class="rail"><span class="dot">${I.leaf}</span><span class="line"></span></div>
@@ -269,7 +278,8 @@ function wicon(k, w) {
             <h3>${esc(a.titre)}</h3>
             ${a.adresse ? `<div class="addr">${I.pin}<span>${esc(a.adresse)}</span></div>` : ''}
             ${a.note ? `<p class="note">${esc(a.note)}</p>` : ''}
-            ${a.billet ? `<div class="billet ${a.billet === 'pris' ? 'ok' : 'att'}">${I.ticket}<span>${a.billet === 'pris' ? 'Billet en main' : 'Billet à récupérer auprès de Selma'}</span></div>` : ''}
+            ${a.billet ? `<div class="billet ${a.billet === 'pris' ? 'ok' : 'att'}">${I.ticket}<span>${a.billet === 'pris' ? 'Billet en main' : 'Billet à récupérer auprès de Selma'}</span></div>
+            <div class="pieces" data-pieces="${idBillet(a)}" data-joindre></div>` : ''}
             <div class="btns">
               ${a.adresse ? `<a class="btn pri" href="${maps(a.adresse)}" target="_blank" rel="noopener">${I.pin}Google Maps</a>` : ''}
               ${a.vol ? `<a class="btn" href="${flightaware(a.vol)}" target="_blank" rel="noopener">${I.plane}Suivre le vol</a>` : ''}
@@ -462,6 +472,102 @@ function telecharge(texte, nom) {
 document.querySelectorAll('[data-cal-all]').forEach(b => b.addEventListener('click', () => {
   telecharge(buildIcs([...ETAPES.map(evtEtape), ...ACTS.map(evtActivite)]), 'japon-2026');
 }));
+
+/* ============================================================
+   Billets sur ce téléphone
+   Le dépôt est public : un QR de billet n'y a pas sa place, qui le
+   scanne monte à notre place. Chacun joint donc ses captures ici ;
+   elles restent dans le téléphone (IndexedDB, la même réserve que
+   la to-do de Selma) et s'affichent hors ligne, au portique.
+   ============================================================ */
+const PIECES = (() => {
+  let base = null;
+  const ouvrir = () => base ? Promise.resolve(base) : new Promise((ok, ko) => {
+    if (!('indexedDB' in window)) return ko(new Error('pas de stockage'));
+    const r = indexedDB.open('japon-billets', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('f', {keyPath: 'id'});
+    r.onsuccess = () => { base = r.result; ok(base); };
+    r.onerror = () => ko(r.error);
+  });
+  const req = (mode, fn) => ouvrir().then(d => new Promise((ok, ko) => {
+    const r = fn(d.transaction('f', mode).objectStore('f'));
+    r.onsuccess = () => ok(r.result); r.onerror = () => ko(r.error);
+  }));
+  return {
+    lister: () => req('readonly', c => c.getAll()).then(l => l || []).catch(() => []),
+    ajouter: (billet, f) => req('readwrite', c => c.add({
+      id: billet + '|' + Date.now() + '|' + Math.random().toString(36).slice(2, 7),
+      billet, nom: f.name, type: f.type, taille: f.size, blob: f })),
+    retirer: id => req('readwrite', c => c.delete(id)).catch(() => {})
+  };
+})();
+
+(() => {
+  const conts = [...document.querySelectorAll('[data-pieces]')];
+  if (!conts.length) return;
+  let urls = [], parId = {};
+  const url = f => { const u = URL.createObjectURL(f.blob); urls.push(u); return u; };
+  const image = f => /^image\//.test(f.type || '');
+
+  async function rafraichir() {
+    urls.forEach(URL.revokeObjectURL); urls = []; parId = {};
+    const tous = await PIECES.lister();
+    tous.forEach(f => (parId[f.id] = f));
+    conts.forEach(c => {
+      const miens = tous.filter(f => f.billet === c.dataset.pieces);
+      const vign = miens.map(f => `<button type="button" class="piece" data-voir="${esc(f.id)}" aria-label="Afficher ${esc(f.nom)}">`
+        + (image(f) ? `<img src="${url(f)}" alt="">` : '<span class="pdf">PDF</span>') + '</button>').join('');
+      if ('joindre' in c.dataset) {
+        c.innerHTML = vign + `<label class="btn joindre">${I.plus}${miens.length ? 'Ajouter' : 'Joindre le billet'}`
+          + `<input type="file" accept="image/*,application/pdf" multiple hidden data-pour="${esc(c.dataset.pieces)}"></label>`;
+      } else {
+        // dans l'itinéraire : les vignettes, ou un renvoi vers le jour dans Activités
+        c.innerHTML = `<span class="cap">${esc(c.dataset.cap || 'Billet')}</span>`
+          + (vign || `<button type="button" class="lien" data-aller="a-${esc(c.dataset.jour)}">joindre depuis Activités ${I.fleche}</button>`);
+      }
+    });
+  }
+
+  // Le visualiseur : fond blanc et image en grand, pour que le portique lise le QR.
+  document.body.insertAdjacentHTML('beforeend', `<div class="voir" id="voir" hidden>
+      <img alt="" id="voirImg">
+      <p id="voirNom"></p>
+      <div class="btns"><button type="button" class="btn" id="voirFermer">${I.croix}Fermer</button>
+        <button type="button" class="btn" id="voirRetirer">${I.corbeille}Retirer</button></div>
+    </div>`);
+  const voir = $('#voir'); let ouvert = null;
+  const fermer = () => { voir.hidden = true; $('#voirImg').src = ''; ouvert = null; };
+  document.addEventListener('click', ev => {
+    const b = ev.target.closest('[data-voir]'); if (!b) return;
+    const f = parId[b.dataset.voir]; if (!f) return;
+    if (!image(f)) { window.open(url(f), '_blank'); return; }
+    ouvert = f; $('#voirImg').src = url(f); $('#voirNom').textContent = f.nom;
+    voir.hidden = false;
+  });
+  $('#voirFermer').addEventListener('click', fermer);
+  $('#voirImg').addEventListener('click', fermer);
+  $('#voirRetirer').addEventListener('click', () => {
+    if (!ouvert || !confirm('Retirer ce billet de ce téléphone ?')) return;
+    PIECES.retirer(ouvert.id).then(() => { fermer(); rafraichir(); });
+  });
+
+  document.addEventListener('change', ev => {
+    const inp = ev.target.closest('input[type=file][data-pour]');
+    if (!inp || !inp.files || !inp.files.length) return;
+    const pour = inp.dataset.pour, fs = [...inp.files];
+    inp.value = '';
+    Promise.all(fs.map(f => PIECES.ajouter(pour, f))).then(rafraichir)
+      .catch(() => alert('Ce fichier n’a pas pu être gardé sur le téléphone.'));
+  });
+
+  document.addEventListener('click', ev => {
+    const b = ev.target.closest('[data-aller]'); if (!b) return;
+    document.querySelector('nav button[data-v="act"]').click();
+    setTimeout(() => { const c = document.getElementById(b.dataset.aller); if (c) c.scrollIntoView({block: 'start', behavior: 'smooth'}); }, 420);
+  });
+
+  rafraichir();
+})();
 
 /* ============================================================
    Navigation
