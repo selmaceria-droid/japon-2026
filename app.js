@@ -318,7 +318,7 @@ function wicon(k, w) {
       <div class="pieces" data-pieces="${idBillet(a)}" data-joindre></div>
     </div>`;
   const passees = liste.filter(x => passe(x.a.date)).map(carte), aVenir = liste.filter(x => !passe(x.a.date)).map(carte);
-  $('#billetsListe').innerHTML = tiroir(passees.join(''), passees.length, ['billet passé', 'billets passés']) + aVenir.join('');
+  $('#billetsListe').innerHTML = tiroir(passees.join(''), passees.length, ['billet expiré', 'billets expirés']) + aVenir.join('');
 })();
 
 /* ============================================================
