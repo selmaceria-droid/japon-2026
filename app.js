@@ -304,6 +304,24 @@ function wicon(k, w) {
 })();
 
 /* ============================================================
+   Onglet Billets : tout ce qui a un billet, dans l'ordre du voyage.
+   Les vignettes sont posées par le module « billets » plus bas.
+   ============================================================ */
+(() => {
+  const liste = ACTS.map((a, i) => ({a, i})).filter(x => x.a.billet);
+  if (!liste.length) { $('#billetsListe').innerHTML = '<div class="empty stagger"><b>Aucun billet à suivre</b></div>'; return; }
+  let n = 0;
+  const carte = ({a}) => `<div class="card bil stagger" style="--i:${n++}">
+      <div class="quand">${esc(fLong.format(D(a.date)))}${a.heure ? ' · ' + esc(a.heure) : ''}</div>
+      <h3>${esc(a.titre)}</h3>
+      <div class="billet ${a.billet === 'pris' ? 'ok' : 'att'}">${I.ticket}<span>${a.billet === 'pris' ? 'Billet en main' : 'Billet à récupérer auprès de Selma'}</span></div>
+      <div class="pieces" data-pieces="${idBillet(a)}" data-joindre></div>
+    </div>`;
+  const passees = liste.filter(x => passe(x.a.date)).map(carte), aVenir = liste.filter(x => !passe(x.a.date)).map(carte);
+  $('#billetsListe').innerHTML = tiroir(passees.join(''), passees.length, ['billet passé', 'billets passés']) + aVenir.join('');
+})();
+
+/* ============================================================
    Onglet Les apps sur place
    Un appui tente d'ouvrir l'app installée via son schéma d'URL ;
    si rien ne se passe, on bascule sur l'App Store. Les schémas ne
@@ -564,9 +582,21 @@ const COFFRE = (() => {
     return urlsClair;
   }
 
+  // L'état du coffre, en tête de l'onglet Billets.
+  function etatCoffre() {
+    const z = $('#coffreEtat'); if (!z) return;
+    if (!Object.values(FIXES).flat().some(chiffre)) { z.innerHTML = ''; return; }
+    if (!verrou) z.innerHTML = `<div class="coffre ok"><span class="ico">${I.cadenas}</span><span class="txt"><b>Billets du groupe déverrouillés</b>Ils restent lisibles sur ce téléphone, même sans réseau.</span>
+        <button type="button" class="btn" data-verrouiller>Verrouiller</button></div>`;
+    else if (verrou === 'mdp') z.innerHTML = `<div class="coffre"><span class="ico">${I.cadenas}</span><span class="txt"><b>Billets du groupe protégés</b>Le mot de passe est dans la conversation du groupe, à taper une fois.</span>
+        <button type="button" class="btn pri" data-cadenas>Mot de passe</button></div>`;
+    else z.innerHTML = `<div class="coffre"><span class="ico">${I.cadenas}</span><span class="txt"><b>Billets du groupe indisponibles</b>${esc(verrou)}</span></div>`;
+  }
+
   async function rafraichir() {
     urls.forEach(URL.revokeObjectURL); urls = []; parId = {};
     const [tous, clair] = await Promise.all([PIECES.lister(), dechiffrerTout()]);
+    etatCoffre();
     tous.forEach(f => (parId[f.id] = f));
     conts.forEach(c => {
       const fixes = FIXES[c.dataset.pieces] || [];
@@ -612,6 +642,10 @@ const COFFRE = (() => {
     cadenasVue.hidden = false; setTimeout(() => $('#cadenasMdp').focus(), 50);
   });
   $('#cadenasFermer').addEventListener('click', () => { cadenasVue.hidden = true; });
+  document.addEventListener('click', ev => {
+    if (!ev.target.closest('[data-verrouiller]')) return;
+    COFFRE.oublier(); rafraichir();
+  });
   $('#cadenasForm').addEventListener('submit', async ev => {
     ev.preventDefault();
     const mdp = $('#cadenasMdp').value.trim(), ok = $('#cadenasOk');

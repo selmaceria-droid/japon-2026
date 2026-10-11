@@ -51,7 +51,8 @@ demande qui suppose un serveur doit être redessinée, pas bricolée.
   téléphone (IndexedDB `japon-billets`, la même réserve que `selma.html`, clé
   `b-<date>-<titre>`), pour les billets qu'on ne veut pas publier.
 
-Les deux s'affichent dans Activités et dans le trajet correspondant de l'onglet
+Les deux s'affichent dans l'onglet **Billets** (tout au même endroit, avec l'état du
+mot de passe en tête), dans Activités et dans le trajet correspondant de l'onglet
 Itinéraire, et s'ouvrent en plein écran sur fond blanc pour le portique.
 
 ## Les fichiers
