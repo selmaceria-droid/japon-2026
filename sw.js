@@ -1,10 +1,31 @@
 // Garde l'app disponible hors ligne (métro, avion…).
 // Changez VERSION à chaque mise à jour pour forcer le rafraîchissement.
-const VERSION = 'japon-v25';
+const VERSION = 'japon-v26';
 const FILES = ['./', 'index.html', 'installer.html', 'selma.html', 'app.js', 'data.js', 'icones-apps.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png',
   // les billets livrés avec l'app (chiffrés), pour les avoir au portique sans réseau
-  ...['8A', '8B', '8C', '8D', '8E'].map(p => 'billets/2026-10-20-shinkansen-' + p + '.jpg.enc'),
-  ...['1B', '1C', '1D'].map(p => 'billets/2026-10-30-nozomi-' + p + '.jpg.enc')];
+  'billets/2026-10-14-tokyo-acces.jpg.enc',
+  'billets/2026-10-14-tokyo-boite-a-cle.jpg.enc',
+  'billets/2026-10-14-tokyo-immeuble.jpg.enc',
+  'billets/2026-10-14-tokyo-porte.jpg.enc',
+  'billets/2026-10-18-fuji-excursion-retrait.jpg.enc',
+  'billets/2026-10-20-bus-mishima.jpg.enc',
+  'billets/2026-10-20-shinkansen-8A.jpg.enc',
+  'billets/2026-10-20-shinkansen-8B.jpg.enc',
+  'billets/2026-10-20-shinkansen-8C.jpg.enc',
+  'billets/2026-10-20-shinkansen-8D.jpg.enc',
+  'billets/2026-10-20-shinkansen-8E.jpg.enc',
+  'billets/2026-10-28-usj-entree-1.jpg.enc',
+  'billets/2026-10-28-usj-entree-2.jpg.enc',
+  'billets/2026-10-28-usj-entree-3.jpg.enc',
+  'billets/2026-10-28-usj-express-1.jpg.enc',
+  'billets/2026-10-28-usj-express-2.jpg.enc',
+  'billets/2026-10-28-usj-express-3.jpg.enc',
+  'billets/2026-10-28-usj-repas-1.jpg.enc',
+  'billets/2026-10-28-usj-repas-2.jpg.enc',
+  'billets/2026-10-28-usj-repas-3.jpg.enc',
+  'billets/2026-10-30-nozomi-1B.jpg.enc',
+  'billets/2026-10-30-nozomi-1C.jpg.enc',
+  'billets/2026-10-30-nozomi-1D.jpg.enc'];
 
 self.addEventListener('install', e => e.waitUntil(
   caches.open(VERSION).then(c => c.addAll(FILES)).then(() => self.skipWaiting())

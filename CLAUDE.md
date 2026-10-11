@@ -116,9 +116,10 @@ ma branche ».
   10 oct. 2026. Source : `api.open-meteo.com`, plus JMA / Weather Company / AccuWeather.
 - **Les réponses de Selma** : elle renvoie un récapitulatif par message. Reporter
   ses oui/non dans `data.js` et basculer les `billet: "attendu"` en `"pris"`.
-  Récapitulatif du 11 oct. reporté : il reste sans réponse la durée du vol
-  Narita → Hanoï, le nom et l'adresse du logement de Tokyo (ce n'est pas la Villa
-  Roppongi), et 8 billets encore « attendus ». Sur le Jidai Matsuri elle répond
+  Récapitulatif du 11 oct. et billets du 11 oct. reportés. Restent : la durée du
+  vol Narita → Hanoï, le logement de Tokyo du 30 oct. au 3 nov. (celui du 14 au 18
+  est l'Airbnb Toyama Century), le retour de Nidia le 30, les pass Universal (3 reçus
+  de chaque pour 5 personnes), et 4 billets « attendus » (2 restos, 2 vols). Sur le Jidai Matsuri elle répond
   « non » au départ du Palais vers midi, ce qui contredit le programme habituel :
   à recouper.
 - **Les schémas d'ouverture des apps** (`schema` dans `APPS`) marqués `aVerifier`
