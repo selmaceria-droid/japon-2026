@@ -83,9 +83,6 @@ const APPS = [
   { nom: "Safety tips", role: "Être alerté", id: 858357174,
     desc: "L'app officielle de l'Agence du tourisme japonaise : alertes séisme, tsunami, typhon et chaleur, en français. Gratuite." },
 
-  { nom: "smartEX", role: "Voir le Shinkansen", id: 1253336330,
-    desc: "Nos Shinkansen du 20 et du 30 y sont réservés, sur le compte de Selma. On peut y lier une place à sa Suica pour passer le portique sans QR." },
-
   { nom: "Universal Studios Japan", role: "Le parc du 28", id: 532097000,
     desc: "L'app officielle, gratuite : temps d'attente, plan, et entrées à horaire pour Super Nintendo World." },
 
