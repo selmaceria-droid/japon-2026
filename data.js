@@ -55,25 +55,22 @@ const ETAPES = [
 // --- APPLICATIONS -------------------------------------------
 // role    : l'action en deux mots, c'est ce qu'on lit en premier
 // id      : identifiant App Store (apps.apple.com/fr/app/idXXXX)
-// schema  : ouvre l'app directement si elle est installée.
-//           Pas documenté par les éditeurs : ceux marqués aVerifier
-//           sont des suppositions. Pour tester, tapez le schéma dans
-//           Safari : si l'app s'ouvre, enlevez aVerifier. Sinon,
-//           videz le champ — l'app apprend toute seule à l'ignorer.
+// schema  : ouvre l'app directement si elle est installée. N'en mettre
+//           qu'un qui a été vérifié (page tester-apps.html sur l'iPhone).
+//           Sans schéma, l'appui ouvre la fiche App Store, dont le
+//           bouton « Ouvrir » lance l'app si elle est installée.
 const APPS = [
   { nom: "Japan Travel", role: "Trouver son train", id: 686373726,
-    schema: "japantravel://", aVerifier: true,
     desc: "Itinéraires, horaires et correspondances dans tout le Japon, avec les guides de quartier. L'app de référence sur place." },
 
   { nom: "Suica", role: "Payer le métro", id: 1156875272,
-    schema: "suica://", aVerifier: true,
     desc: "La carte de transport rechargeable, dans Apple Pay. On pose le téléphone sur le portique, et ça sert aussi au konbini." },
 
   { nom: "GO", role: "Prendre un taxi", id: 1254341709,
     desc: "L'app de taxi la plus répandue au Japon. On commande, on suit la voiture sur la carte et on paie dedans." },
 
   { nom: "Google Traduction", role: "Traduire un truc", id: 414706506,
-    schema: "googletranslate://", aVerifier: true,
+    schema: "googletranslate://",
     desc: "Gratuite, sans limite. L'appareil photo traduit menus et panneaux. Télécharger le japonais avant de partir : elle marche alors hors ligne." },
 
   { nom: "Google Maps", role: "Trouver un lieu", id: 585027354,
@@ -93,14 +90,12 @@ const APPS = [
     desc: "Connexion automatique aux wifi gratuits : aéroports, gares, trains, konbini, cafés. À installer avant de partir." },
 
   { nom: "Ubigi", role: "Avoir du réseau", id: 1375857674,
-    schema: "ubigi://", aVerifier: true,
     desc: "L'eSIM : un forfait data activé avant le départ, sans toucher à la carte SIM française." },
 
   { nom: "Travel Japan Phrase", role: "Dire une phrase", id: 6739940739,
     desc: "230 phrases toutes prêtes, rangées par situation : resto, train, taxi, hôtel, pharmacie." },
 
   { nom: "Vietnam Airlines", role: "Le vol retour", id: 1472323081,
-    schema: "vietnamairlines://", aVerifier: true,
     desc: "Enregistrement, carte d'embarquement et suivi des vols du 3 novembre." }
 ];
 

@@ -122,9 +122,11 @@ ma branche ».
   de chaque pour 5 personnes), et 4 billets « attendus » (2 restos, 2 vols). Sur le Jidai Matsuri elle répond
   « non » au départ du Palais vers midi, ce qui contredit le programme habituel :
   à recouper.
-- **Les schémas d'ouverture des apps** (`schema` dans `APPS`) marqués `aVerifier`
-  sont des suppositions ; les éditeurs ne les documentent pas. Pour en tester un :
-  le taper dans Safari sur l'iPhone.
+- **Les schémas d'ouverture des apps** (`schema` dans `APPS`) : seuls Google Maps
+  (documenté) et Google Traduction (confirmé) en ont un. Les autres ouvrent la fiche
+  App Store, dont le bouton « Ouvrir » lance l'app. Pour en trouver de vrais :
+  `tester-apps.html` sur l'iPhone, qui renvoie le résultat par message ; reporter
+  dans `data.js` les liens qui marchent. Ne jamais remettre de schéma deviné.
 - Si le planning définitif migre vers l'app **Stippl**, réaligner `data.js` dessus.
 
 ## Ton

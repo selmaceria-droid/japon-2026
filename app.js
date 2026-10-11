@@ -323,18 +323,18 @@ function wicon(k, w) {
 
 /* ============================================================
    Onglet Les apps sur place
-   Un appui tente d'ouvrir l'app installée via son schéma d'URL ;
-   si rien ne se passe, on bascule sur l'App Store. Les schémas ne
-   sont pas documentés par les éditeurs : celui qui échoue est
-   retenu une fois pour toutes, et l'appui suivant va droit au but.
+   Une page web ne peut pas savoir quelles apps sont installées.
+   Avec un schéma d'URL connu, l'appui ouvre l'app ; sinon il mène à
+   la fiche App Store, où le bouton « Ouvrir » lance l'app installée.
+   Si l'app ne s'ouvre pas, on propose l'App Store sans y basculer
+   d'office : iOS peut demander une confirmation qui prend du temps,
+   et un échec n'est plus retenu (l'ancienne mémoire est effacée).
    ============================================================ */
 (() => {
   const liste = typeof APPS !== 'undefined' ? APPS : [];
   const icones = typeof ICONES_APPS !== 'undefined' ? ICONES_APPS : {};
   if (!liste.length) return;
-  const CLE = 'japon.schemas.hs';
-  const lireHS = () => { try { return new Set(JSON.parse(localStorage.getItem(CLE) || '[]')); } catch { return new Set(); } };
-  const ecrireHS = s => { try { localStorage.setItem(CLE, JSON.stringify([...s])); } catch {} };
+  try { localStorage.removeItem('japon.schemas.hs'); } catch {}
   const boutique = a => `https://apps.apple.com/fr/app/id${a.id}`;
 
   $('#apps').innerHTML = liste.map((a, i) => `
@@ -342,13 +342,13 @@ function wicon(k, w) {
       ${icones[a.id] ? `<img src="${icones[a.id]}" alt="" width="52" height="52">` : `<span class="vide">${esc((a.nom || '?').charAt(0))}</span>`}
       <div class="role">${esc(a.role || a.nom)}</div>
       ${I.fleche.replace('<svg ', '<svg class="fleche" ')}
-      <div class="nom">${esc(a.nom)}${a.schema && a.aVerifier ? '<span class="tag est">ouverture à tester</span>' : ''}</div>
+      <div class="nom">${esc(a.nom)}${a.schema ? '' : '<span class="tag ghost">via l’App Store</span>'}</div>
       <div class="desc">${esc(a.desc || '')}</div>
+      <div class="secours" hidden>L’app ne s’est pas ouverte ? <a href="${boutique(a)}" target="_blank" rel="noopener">Ouvrir sa fiche App Store</a></div>
     </div>`).join('');
 
-  function ouvrir(a) {
-    const hs = lireHS();
-    if (!a.schema || hs.has(String(a.id))) { location.href = boutique(a); return; }
+  function ouvrir(a, carte) {
+    if (!a.schema) { location.href = boutique(a); return; }
     let parti = false;
     const vu = () => { parti = true; };
     document.addEventListener('visibilitychange', vu, {once: true});
@@ -357,17 +357,15 @@ function wicon(k, w) {
     setTimeout(() => {
       document.removeEventListener('visibilitychange', vu);
       window.removeEventListener('pagehide', vu);
-      if (parti || document.hidden) { hs.delete(String(a.id)); ecrireHS(hs); return; }
-      hs.add(String(a.id)); ecrireHS(hs);        // ce schéma ne marche pas : on ne réessaie plus
-      location.href = boutique(a);
-    }, 1400);
+      if (!parti && !document.hidden) carte.querySelector('.secours').hidden = false;
+    }, 2500);
   }
 
-  const cible = ev => { const c = ev.target.closest('[data-appli]'); return c ? liste[+c.dataset.appli] : null; };
-  $('#apps').addEventListener('click', ev => { const a = cible(ev); if (a) ouvrir(a); });
+  const cible = ev => { if (ev.target.closest('.secours a')) return null; const c = ev.target.closest('[data-appli]'); return c ? [liste[+c.dataset.appli], c] : null; };
+  $('#apps').addEventListener('click', ev => { const x = cible(ev); if (x) ouvrir(...x); });
   $('#apps').addEventListener('keydown', ev => {
     if (ev.key !== 'Enter' && ev.key !== ' ') return;
-    const a = cible(ev); if (a) { ev.preventDefault(); ouvrir(a); }
+    const x = cible(ev); if (x) { ev.preventDefault(); ouvrir(...x); }
   });
 })();
 

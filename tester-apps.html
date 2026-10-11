@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tester les apps</title>
+<style>
+:root{--bg:#FBF6F0;--paper:#fff;--ink:#2B2320;--mute:#8C8077;--line:#EDE2D6;--ok:#5E8B4E;--ko:#C25A34}
+@media (prefers-color-scheme:dark){:root{--bg:#14100E;--paper:#211A17;--ink:#F2E9E1;--mute:#A3948A;--line:#352A24}}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,system-ui,sans-serif;padding:20px 16px 60px}
+main{max-width:520px;margin:0 auto}
+h1{font-size:24px;margin:0 0 6px}
+p{color:var(--mute);font-size:14px;margin:0 0 16px}
+.app{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+.app h2{font-size:16px;margin:0 0 10px}
+.app h2 b{font-weight:400;color:var(--mute);font-size:13px;margin-left:6px}
+.essai{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.essai a{flex:1;min-width:150px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);color:var(--ink);text-decoration:none;font:500 14px ui-monospace,monospace}
+.essai button{padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:none;color:var(--ink);font:500 13px -apple-system,sans-serif}
+.essai button[aria-pressed=true].oui{background:var(--ok);color:#fff;border-color:var(--ok)}
+.essai button[aria-pressed=true].non{background:var(--ko);color:#fff;border-color:var(--ko)}
+#envoyer{width:100%;padding:14px;border-radius:999px;border:0;background:#2C3A63;color:#fff;font:600 16px -apple-system,sans-serif;margin-top:10px}
+#etat{text-align:center;color:var(--mute);font-size:13px;min-height:1.4em}
+</style>
+</head>
+<body>
+<main>
+  <h1>Tester l'ouverture des apps</h1>
+  <p>À faire sur l'iPhone, dans Safari, avec les apps installées. Touche un lien : si l'app s'ouvre (parfois après « Ouvrir ? »), reviens ici et touche « Ça ouvre ». Sinon, « Rien ». À la fin, envoie le résultat à Selma.</p>
+  <div id="liste"></div>
+  <button id="envoyer">Envoyer le résultat</button>
+  <p id="etat"></p>
+</main>
+<script>
+// Les éditeurs ne publient pas ces adresses : ce sont des candidats à vérifier.
+var ESSAIS = [
+  ['Japan Travel (NAVITIME)', ['japantravel://', 'navitime-japantravel://', 'navitimejapantravel://', 'jtnavi://']],
+  ['Suica', ['mobilesuica://', 'suica://', 'jremobilesuica://', 'welcomesuica://']],
+  ['GO (taxi)', ['go-taxi://', 'goapp://', 'gotaxi://', 'mot-go://']],
+  ['Google Traduction', ['googletranslate://']],
+  ['Google Maps', ['comgooglemaps://']],
+  ['Safety tips', ['safetytips://', 'jp.co.rcsc.safetytips://']],
+  ['Universal Studios Japan', ['usj://', 'usjapp://', 'usjofficial://', 'universalstudiosjapan://']],
+  ['Tabelog', ['tabelog://', 'tabelog-global://', 'tabelogglobal://']],
+  ['Japan Wi-Fi auto-connect', ['japanwifi://', 'japanconnectedfree://', 'jcfw://']],
+  ['Ubigi', ['ubigi://']],
+  ['Travel Japan Phrase', ['traveljapanphrase://']],
+  ['Vietnam Airlines', ['vietnamairlines://', 'vnairlines://', 'lotusmiles://']]
+];
+var CLE = 'japon.test.schemas', etat = {};
+try { etat = JSON.parse(localStorage.getItem(CLE) || '{}') || {}; } catch (e) {}
+var garder = function () { try { localStorage.setItem(CLE, JSON.stringify(etat)); } catch (e) {} };
+function rendre() {
+  document.getElementById('liste').innerHTML = ESSAIS.map(function (x) {
+    return '<div class="app"><h2>' + x[0] + '</h2>' + x[1].map(function (s) {
+      return '<div class="essai"><a href="' + s + '">' + s + '</a>' +
+        '<button class="oui" data-s="' + s + '" data-v="oui" aria-pressed="' + (etat[s] === 'oui') + '">Ça ouvre</button>' +
+        '<button class="non" data-s="' + s + '" data-v="non" aria-pressed="' + (etat[s] === 'non') + '">Rien</button></div>';
+    }).join('') + '</div>';
+  }).join('');
+}
+document.addEventListener('click', function (ev) {
+  var b = ev.target.closest('button[data-s]'); if (!b) return;
+  etat[b.dataset.s] = etat[b.dataset.s] === b.dataset.v ? undefined : b.dataset.v; garder(); rendre();
+});
+document.getElementById('envoyer').addEventListener('click', function () {
+  var L = ['Test des apps — Japon 2026', ''];
+  ESSAIS.forEach(function (x) {
+    var oui = x[1].filter(function (s) { return etat[s] === 'oui'; });
+    L.push(x[0] + ' : ' + (oui.length ? oui.join(', ') : 'aucun lien ne marche'));
+  });
+  var t = L.join('\n'), dire = function (m) { document.getElementById('etat').textContent = m; };
+  if (navigator.share) navigator.share({text: t}).then(function () { dire('Envoyé, merci !'); }, function () {});
+  else if (navigator.clipboard) navigator.clipboard.writeText(t).then(function () { dire('Copié, colle-le dans un message'); });
+});
+rendre();
+</script>
+</body>
+</html>
