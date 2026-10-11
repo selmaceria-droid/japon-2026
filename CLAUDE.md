@@ -67,6 +67,12 @@ git add -A && git commit -m "..." && git push
 déjà l'app servent l'ancienne version depuis leur cache. Compter ~40 s avant que
 GitHub Pages publie. Pour vérifier soi-même tout de suite, ajouter `?cb=1` à l'adresse.
 
+**Depuis une session Claude distante** (qui travaille sur une branche `claude/...`) :
+GitHub Pages ne publie que `main`. Selma a demandé que Claude publie lui-même, sans
+attendre : après le commit sur la branche de travail, fusionner dans `main` et pousser
+`main` dans la foulée, sans pull request ni question. Ne pas s'arrêter à « c'est sur
+ma branche ».
+
 ## Pièges déjà rencontrés — ne pas les refaire
 
 - **Cache GitHub Pages** : 10 min de `max-age`. Le service worker revalide
