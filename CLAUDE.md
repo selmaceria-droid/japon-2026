@@ -35,12 +35,24 @@ Les références du Rokuhara Inn et les PNR restent dans Booking, volontairement
 de stockage partagé, pas de réception de fichiers, pas de notification push. Toute
 demande qui suppose un serveur doit être redessinée, pas bricolée.
 
-**Les billets eux-mêmes (QR, captures smartEX…) ne vont jamais dans le dépôt** : un QR
-scanné, c'est quelqu'un qui monte à notre place. L'app propose « Joindre le billet »
-sur chaque activité à billet : la capture reste dans le téléphone (IndexedDB
-`japon-billets`, la même réserve que `selma.html`, clé `b-<date>-<titre>`), s'affiche
-dans Activités et dans le trajet correspondant de l'onglet Itinéraire, et s'ouvre en
-plein écran sur fond blanc pour le portique. Chacun joint les siens sur son téléphone.
+**Les billets eux-mêmes.** Deux chemins coexistent :
+
+- `fichiers` sur une activité (`{src, nom}`) : des images livrées avec l'app pour tout
+  le groupe, **chiffrées** dans `billets/*.jpg.enc` et mises en cache par `sw.js`.
+  L'app demande le mot de passe du groupe une fois par téléphone (PBKDF2 → AES-GCM,
+  dans le navigateur). Le mot de passe circule par message, **jamais dans le dépôt**,
+  ni dans un commit, ni ici. Pour ajouter un billet : réduire à 900 px de large
+  (Pillow, qualité 85), le poser dans `billets-clair/` (ignoré par git), lancer
+  `JAPON_MDP='…' node outils/chiffrer-billets.mjs`, puis lister le `.enc` dans
+  `data.js` et dans `FILES` de `sw.js`. On n'y met que le billet : jamais la capture
+  avec le nom de famille, le code de retrait, le prix ou la carte bancaire.
+  La protection vaut ce que vaut le mot de passe : les `.enc` sont publics.
+- « Joindre le billet » sur chaque activité à billet : la capture reste dans le
+  téléphone (IndexedDB `japon-billets`, la même réserve que `selma.html`, clé
+  `b-<date>-<titre>`), pour les billets qu'on ne veut pas publier.
+
+Les deux s'affichent dans Activités et dans le trajet correspondant de l'onglet
+Itinéraire, et s'ouvrent en plein écran sur fond blanc pour le portique.
 
 ## Les fichiers
 

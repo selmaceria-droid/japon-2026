@@ -1,7 +1,10 @@
 // Garde l'app disponible hors ligne (métro, avion…).
 // Changez VERSION à chaque mise à jour pour forcer le rafraîchissement.
-const VERSION = 'japon-v20';
-const FILES = ['./', 'index.html', 'installer.html', 'selma.html', 'app.js', 'data.js', 'icones-apps.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
+const VERSION = 'japon-v23';
+const FILES = ['./', 'index.html', 'installer.html', 'selma.html', 'app.js', 'data.js', 'icones-apps.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png',
+  // les billets livrés avec l'app (chiffrés), pour les avoir au portique sans réseau
+  ...['8A', '8B', '8C', '8D', '8E'].map(p => 'billets/2026-10-20-shinkansen-' + p + '.jpg.enc'),
+  ...['1B', '1C', '1D'].map(p => 'billets/2026-10-30-nozomi-' + p + '.jpg.enc')];
 
 self.addEventListener('install', e => e.waitUntil(
   caches.open(VERSION).then(c => c.addAll(FILES)).then(() => self.skipWaiting())

@@ -79,6 +79,7 @@ const I = {
   ticket: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V7a1.6 1.6 0 0 1 1.6-1.6h12.8A1.6 1.6 0 0 1 20 7v2a2.4 2.4 0 0 0 0 6v2a1.6 1.6 0 0 1-1.6 1.6H5.6A1.6 1.6 0 0 1 4 17v-2a2.4 2.4 0 0 0 0-6z"/><path d="M14.2 6.2v1.6M14.2 11.2v1.6M14.2 16.2v1.6"/></svg>',
   plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M12 5.5v13M5.5 12h13"/></svg>',
   croix: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg>',
+  cadenas: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.6"/><path d="M8 10.5V7.8a4 4 0 0 1 8 0v2.7M12 14.6v2.4"/></svg>',
   corbeille: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9.5 7V4.8A1.3 1.3 0 0 1 10.8 3.5h2.4a1.3 1.3 0 0 1 1.3 1.3V7M6.5 7l.8 12.1a1.5 1.5 0 0 0 1.5 1.4h6.4a1.5 1.5 0 0 0 1.5-1.4L17.5 7"/></svg>',
   plane: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 10.6 3.4 8.8a.6.6 0 0 1-.2-1l1-.8a.9.9 0 0 1 .8-.2l5.7 1.1 3-3a2.3 2.3 0 0 1 3.3 3.2l-3 3 1.1 5.8a.9.9 0 0 1-.2.8l-.8 1a.6.6 0 0 1-1-.2l-1.8-6.9-2.5 2.5.3 2.3a.8.8 0 0 1-.2.6l-.6.7a.5.5 0 0 1-.9-.2L7 16.9l-1.3-.4a.5.5 0 0 1-.2-.9l.7-.6a.8.8 0 0 1 .6-.2l2.3.3z"/></svg>',
   leaf: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.2 18.2 6.95 18.13 6.54 17.36 3.3 15.59 6.98 15.42 7.69 14.91 7.6 15.06 6.13 14.21 5.66 12.71 3.39 8.36 7.57 10.94 9.03 11.51 10.14 12.87 9.49 10.32 10.24 8.06 12 2.2 13.76 8.06 14.51 10.32 13.86 12.87 14.97 11.51 16.43 10.94 20.61 8.36 18.34 12.71 17.87 14.21 16.4 15.06 16.31 14.91 17.02 15.42 20.7 15.59 17.46 17.36 17.05 18.13 15.8 18.2Z"/><path stroke="currentColor" stroke-width="1.15" stroke-linecap="round" d="M12 17.3v5"/></svg>'
@@ -502,31 +503,129 @@ const PIECES = (() => {
   };
 })();
 
+/* Les billets livrés avec l'app sont chiffrés dans le dépôt (outils/chiffrer-billets.mjs).
+   Le mot de passe, donné une fois, reste dans le téléphone ; la clé en est dérivée
+   à chaque ouverture, et les images déchiffrées ne vivent qu'en mémoire. */
+const COFFRE = (() => {
+  const CLE = 'japon.billets.mdp', enc = new TextEncoder(), SEL = enc.encode('japon-2026-billets');
+  let cle = null, mdpCle = null; const clair = {};
+  const lireMdp = () => { try { return localStorage.getItem(CLE) || ''; } catch { return ''; } };
+  async function derive(mdp) {
+    if (cle && mdpCle === mdp) return cle;
+    const base = await crypto.subtle.importKey('raw', enc.encode(mdp), 'PBKDF2', false, ['deriveKey']);
+    cle = await crypto.subtle.deriveKey({name: 'PBKDF2', salt: SEL, iterations: 200000, hash: 'SHA-256'},
+      base, {name: 'AES-GCM', length: 256}, false, ['decrypt']);
+    mdpCle = mdp; return cle;
+  }
+  // Rend l'URL d'une image déchiffrée. Un mauvais mot de passe fait échouer AES-GCM : on le sait tout de suite.
+  async function ouvrir(src, mdp) {
+    if (clair[src]) return clair[src];
+    const r = await fetch(src); if (!r.ok) throw new Error('fichier absent');
+    const buf = new Uint8Array(await r.arrayBuffer());
+    if (buf[0] !== 74 || buf[1] !== 66 || buf[2] !== 49) throw new Error('format');   // « JB1 »
+    const donnees = await crypto.subtle.decrypt({name: 'AES-GCM', iv: buf.slice(3, 15)}, await derive(mdp), buf.slice(15));
+    return (clair[src] = URL.createObjectURL(new Blob([donnees], {type: 'image/jpeg'})));
+  }
+  return {
+    lireMdp, ouvrir,
+    garderMdp: m => { try { localStorage.setItem(CLE, m); } catch {} },
+    oublier: () => { try { localStorage.removeItem(CLE); } catch {} cle = null; mdpCle = null; },
+    possible: !!(window.crypto && crypto.subtle)
+  };
+})();
+
 (() => {
   const conts = [...document.querySelectorAll('[data-pieces]')];
   if (!conts.length) return;
   let urls = [], parId = {};
   const url = f => { const u = URL.createObjectURL(f.blob); urls.push(u); return u; };
   const image = f => /^image\//.test(f.type || '');
+  // Les billets livrés avec l'app (champ fichiers dans data.js), par clé d'activité.
+  const FIXES = {};
+  ACTS.forEach(a => { if (a.fichiers && a.fichiers.length) FIXES[idBillet(a)] = a.fichiers; });
+  const chiffre = f => /\.enc$/i.test(f.src);
+  let verrou = '';   // message quand les billets chiffrés ne sont pas lisibles
+
+  // Déchiffre ce qui peut l'être avec le mot de passe en mémoire ; sinon pose le verrou.
+  async function dechiffrerTout() {
+    const encs = [...new Set(Object.values(FIXES).flat().filter(chiffre).map(f => f.src))];
+    const urlsClair = {};
+    if (!encs.length) return urlsClair;
+    if (!COFFRE.possible) { verrou = 'Ce navigateur ne sait pas déchiffrer les billets (il faut Safari ou Chrome, en https).'; return urlsClair; }
+    const mdp = COFFRE.lireMdp();
+    if (!mdp) { verrou = 'mdp'; return urlsClair; }
+    try {
+      await Promise.all(encs.map(async s => { urlsClair[s] = await COFFRE.ouvrir(s, mdp); }));
+      verrou = '';
+    } catch (e) {
+      if (e && e.name === 'OperationError') { COFFRE.oublier(); verrou = 'mdp'; }
+      else verrou = 'Billets indisponibles pour l’instant (pas de réseau ?).';
+    }
+    return urlsClair;
+  }
 
   async function rafraichir() {
     urls.forEach(URL.revokeObjectURL); urls = []; parId = {};
-    const tous = await PIECES.lister();
+    const [tous, clair] = await Promise.all([PIECES.lister(), dechiffrerTout()]);
     tous.forEach(f => (parId[f.id] = f));
     conts.forEach(c => {
+      const fixes = FIXES[c.dataset.pieces] || [];
       const miens = tous.filter(f => f.billet === c.dataset.pieces);
-      const vign = miens.map(f => `<button type="button" class="piece" data-voir="${esc(f.id)}" aria-label="Afficher ${esc(f.nom)}">`
-        + (image(f) ? `<img src="${url(f)}" alt="">` : '<span class="pdf">PDF</span>') + '</button>').join('');
+      const vign = fixes.map(f => {
+          const src = chiffre(f) ? clair[f.src] : f.src;
+          if (!src) return '';
+          return `<button type="button" class="piece fixe" data-voir-src="${esc(src)}" data-nom="${esc(f.nom || '')}" aria-label="Afficher ${esc(f.nom || 'le billet')}">`
+            + `<img src="${esc(src)}" alt="">${f.nom ? `<span class="lbl">${esc(f.nom.replace(/^Place /, ''))}</span>` : ''}</button>`;
+        }).join('')
+        + miens.map(f => `<button type="button" class="piece" data-voir="${esc(f.id)}" aria-label="Afficher ${esc(f.nom)}">`
+          + (image(f) ? `<img src="${url(f)}" alt="">` : '<span class="pdf">PDF</span>') + '</button>').join('');
+      const nbVerrou = fixes.filter(f => chiffre(f) && !clair[f.src]).length;
+      const cadenas = !nbVerrou ? '' : verrou === 'mdp'
+        ? `<button type="button" class="btn cadenas" data-cadenas>${I.cadenas}${nbVerrou} billet${nbVerrou > 1 ? 's' : ''} · mot de passe</button>`
+        : `<span class="verrou">${I.cadenas}${esc(verrou)}</span>`;
       if ('joindre' in c.dataset) {
-        c.innerHTML = vign + `<label class="btn joindre">${I.plus}${miens.length ? 'Ajouter' : 'Joindre le billet'}`
+        c.innerHTML = vign + cadenas + `<label class="btn joindre">${I.plus}${vign ? 'Ajouter' : 'Joindre le billet'}`
           + `<input type="file" accept="image/*,application/pdf" multiple hidden data-pour="${esc(c.dataset.pieces)}"></label>`;
       } else {
         // dans l'itinéraire : les vignettes, ou un renvoi vers le jour dans Activités
-        c.innerHTML = `<span class="cap">${esc(c.dataset.cap || 'Billet')}</span>`
-          + (vign || `<button type="button" class="lien" data-aller="a-${esc(c.dataset.jour)}">joindre depuis Activités ${I.fleche}</button>`);
+        c.innerHTML = `<span class="cap">${esc(c.dataset.cap || 'Billet')}</span>` + vign + cadenas
+          + (vign || cadenas ? '' : `<button type="button" class="lien" data-aller="a-${esc(c.dataset.jour)}">joindre depuis Activités ${I.fleche}</button>`);
       }
     });
   }
+
+  // L'écran du mot de passe. Il est demandé une fois par téléphone.
+  document.body.insertAdjacentHTML('beforeend', `<div class="voir cadenasVue" id="cadenasVue" hidden>
+      <form id="cadenasForm" autocomplete="off">
+        <span class="gros">${I.cadenas}</span>
+        <h3>Les billets sont protégés</h3>
+        <p>Le mot de passe est dans la conversation du groupe. Il suffit de le taper une fois sur ce téléphone.</p>
+        <input type="password" id="cadenasMdp" placeholder="Mot de passe" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+        <p class="err" id="cadenasErr"></p>
+        <div class="btns"><button type="button" class="btn" id="cadenasFermer">${I.croix}Plus tard</button>
+          <button type="submit" class="btn pri" id="cadenasOk">${I.cadenas}Déverrouiller</button></div>
+      </form></div>`);
+  const cadenasVue = $('#cadenasVue');
+  document.addEventListener('click', ev => {
+    if (!ev.target.closest('[data-cadenas]')) return;
+    $('#cadenasErr').textContent = ''; $('#cadenasMdp').value = '';
+    cadenasVue.hidden = false; setTimeout(() => $('#cadenasMdp').focus(), 50);
+  });
+  $('#cadenasFermer').addEventListener('click', () => { cadenasVue.hidden = true; });
+  $('#cadenasForm').addEventListener('submit', async ev => {
+    ev.preventDefault();
+    const mdp = $('#cadenasMdp').value.trim(), ok = $('#cadenasOk');
+    if (!mdp) return;
+    ok.disabled = true; ok.textContent = 'Vérification…'; $('#cadenasErr').textContent = '';
+    const premier = Object.values(FIXES).flat().find(chiffre);
+    try {
+      await COFFRE.ouvrir(premier.src, mdp);
+      COFFRE.garderMdp(mdp); cadenasVue.hidden = true; await rafraichir();
+    } catch (e) {
+      $('#cadenasErr').textContent = e && e.name === 'OperationError' ? 'Ce n’est pas le bon mot de passe.' : 'Impossible de lire le billet (réseau ?). Réessaie.';
+    }
+    ok.disabled = false; ok.innerHTML = `${I.cadenas}Déverrouiller`;
+  });
 
   // Le visualiseur : fond blanc et image en grand, pour que le portique lise le QR.
   document.body.insertAdjacentHTML('beforeend', `<div class="voir" id="voir" hidden>
@@ -537,12 +636,17 @@ const PIECES = (() => {
     </div>`);
   const voir = $('#voir'); let ouvert = null;
   const fermer = () => { voir.hidden = true; $('#voirImg').src = ''; ouvert = null; };
+  const montrer = (src, nom, retirable) => {
+    $('#voirImg').src = src; $('#voirNom').textContent = nom || '';
+    $('#voirRetirer').hidden = !retirable; voir.hidden = false;
+  };
   document.addEventListener('click', ev => {
+    const fixe = ev.target.closest('[data-voir-src]');
+    if (fixe) { ouvert = null; montrer(fixe.dataset.voirSrc, fixe.dataset.nom, false); return; }
     const b = ev.target.closest('[data-voir]'); if (!b) return;
     const f = parId[b.dataset.voir]; if (!f) return;
     if (!image(f)) { window.open(url(f), '_blank'); return; }
-    ouvert = f; $('#voirImg').src = url(f); $('#voirNom').textContent = f.nom;
-    voir.hidden = false;
+    ouvert = f; montrer(url(f), f.nom, true);
   });
   $('#voirFermer').addEventListener('click', fermer);
   $('#voirImg').addEventListener('click', fermer);

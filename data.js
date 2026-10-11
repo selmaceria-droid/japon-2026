@@ -3,7 +3,9 @@
 //  Le dépôt est PUBLIC. Ne mettez jamais ici : numéro ou code de
 //  réservation, numéro de billet, téléphone, adresse e-mail.
 //  billet : "attendu" (Selma doit l'envoyer) ou "pris" (on l'a).
-//  Le billet lui-même reste dans le Wallet ou la boîte mail.
+//  fichiers : les billets eux-mêmes, {src, nom}. Un .enc est chiffré avec le
+//  mot de passe du groupe (voir outils/chiffrer-billets.mjs) : l'app le
+//  demande une fois par téléphone.
 // =========================================================
 
 // --- ÉTAPES -------------------------------------------------
@@ -42,10 +44,11 @@ const ETAPES = [
 
   { lieu: "Tokyo", du: "2026-10-30", au: "2026-11-03", nuits: 4,
     note: "392 km depuis Osaka · vol retour le 3 novembre",
-    trajet: { mode: "Shinkansen Nozomi", duree: "~2 h 30", prix: "80-90 €",
-              depart: "Shin-Osaka Station", arrivee: "Tokyo Station",
+    trajet: { mode: "Shinkansen Nozomi 90", duree: "2 h 19", prix: "80-90 €",
+              depart: "Shin-Osaka Station", arrivee: "Shinagawa Station",
               details: ["Avant : à pied jusqu'à Ebisucho ou Shin-Imamiya, puis 20-30 min de métro + JR jusqu'à Shin-Osaka.",
-                        "Après : Uber jusqu'au logement (15-20 €), ou JR Yamanote jusqu'à Shinjuku puis 15-20 min à pied."] } }
+                        "Nozomi 90 : 11h30 → 13h49, voiture 5, places 1-B à 1-D. Trois billets pris ; le retour de Nidia reste à vérifier.",
+                        "Après, depuis Shinagawa : JR Yamanote jusqu'à Shinjuku (~20 min) puis 15-20 min à pied, ou Uber (15-20 €)."] } }
 ];
 
 // --- APPLICATIONS -------------------------------------------
@@ -129,7 +132,8 @@ const ACTIVITES = [
   { date: "2026-10-19", titre: "Téléphérique du Mt Fuji", adresse: "Mt. Fuji Panoramic Ropeway, Fujikawaguchiko, Yamanashi", note: "S'il n'y a pas trop de monde.", marche: 1 },
   { date: "2026-10-20", heure: "10:00", titre: "Check-out Fujisan Kingyo", adresse: "Fujisan Kingyo, Katsuyama, Fujikawaguchiko, Yamanashi", marche: 0 },
   { date: "2026-10-20", heure: "10:20", duree: 100, titre: "Bus express · Kawaguchiko → Mishima", adresse: "Kawaguchiko Station, Fujikawaguchiko, Yamanashi", note: "Ou 10h55. Arrivée 11h50 ou 12h30. Compter 1h30 à 2h. ~13 €.", marche: 0, billet: "attendu" },
-  { date: "2026-10-20", heure: "13:46", duree: 115, titre: "Shinkansen · Mishima → Kyoto", adresse: "Mishima Station, Shizuoka", note: "Hikari 713, arrivée 15h37. Voiture 6, places 8-A à 8-E, les cinq ensemble. Selma a envoyé les QR le 11 oct. : ajoute le tien à Apple Wallet et joins la capture ici, elle reste dans ton téléphone. Dans smartEX, « Designate IC Card » lie une place à ta Suica : on passe alors le portique en posant le téléphone.", marche: 0, billet: "pris" },
+  { date: "2026-10-20", heure: "13:46", duree: 115, titre: "Shinkansen · Mishima → Kyoto", adresse: "Mishima Station, Shizuoka", note: "Hikari 713, arrivée 15h37. Voiture 6, places 8-A à 8-E, les cinq ensemble. Les cinq QR sont ci-dessous, un par place : au portique, ouvre le tien et monte la luminosité. Dans smartEX, « Designate IC Card » lie une place à ta Suica : on passe alors en posant le téléphone.", marche: 0, billet: "pris",
+    fichiers: [{src: "billets/2026-10-20-shinkansen-8A.jpg.enc", nom: "Place 8-A"}, {src: "billets/2026-10-20-shinkansen-8B.jpg.enc", nom: "Place 8-B"}, {src: "billets/2026-10-20-shinkansen-8C.jpg.enc", nom: "Place 8-C"}, {src: "billets/2026-10-20-shinkansen-8D.jpg.enc", nom: "Place 8-D"}, {src: "billets/2026-10-20-shinkansen-8E.jpg.enc", nom: "Place 8-E"}] },
   { date: "2026-10-20", titre: "Check-in Rokuhara Inn", adresse: "Rokuhara Inn, Higashiyama-ku, Kyoto", note: "C'est bien le Rokuhara Inn, pas le Daiya Ryokan (confirmé par Selma). Le numéro de réservation et le code ne sont pas dans l'app — garde-les dans Booking.", marche: 0 },
   { date: "2026-10-20", titre: "Gion et la rue Hanamikoji", adresse: "Hanamikoji Dori, Gion, Higashiyama-ku, Kyoto", marche: 2 },
   { date: "2026-10-20", titre: "Yasaka Shrine", adresse: "Yasaka Shrine, 625 Gionmachi Kitagawa, Higashiyama-ku, Kyoto", marche: 1 },
@@ -162,7 +166,8 @@ const ACTIVITES = [
   { date: "2026-10-29", titre: "Dotonbori", adresse: "Dotonbori, Chuo-ku, Osaka", note: "20-25 min du logement.", marche: 2 },
   { date: "2026-10-29", titre: "Shinsekai", adresse: "Shinsekai, Naniwa-ku, Osaka", note: "2-5 min. Plutôt le soir, avec l'arcade.", marche: 2 },
   { date: "2026-10-29", titre: "Pokémon Center", adresse: "Pokemon Center Osaka, Umeda, Kita-ku, Osaka", marche: 1 },
-  { date: "2026-10-30", duree: 150, titre: "Shinkansen Nozomi · Shin-Osaka → Tokyo", adresse: "Shin-Osaka Station, Osaka", note: "80-90 €. Puis Uber (15-20 €) ou JR Yamanote jusqu'à Shinjuku. Une réservation smartEX existe déjà pour le 30 chez Selma, horaires et QR à recevoir.", marche: 1, billet: "attendu" },
+  { date: "2026-10-30", heure: "11:30", duree: 139, titre: "Shinkansen Nozomi · Shin-Osaka → Shinagawa", adresse: "Shin-Osaka Station, Osaka", note: "Nozomi 90, arrivée 13h49 à Shinagawa, pas à Tokyo Station. Voiture 5, places 1-B, 1-C et 1-D : trois billets, Selma a écrit « pour nous 3 ». ⚠ Vérifier le retour de Nidia. Depuis Shinagawa : JR Yamanote jusqu'à Shinjuku (~20 min) ou Uber.", marche: 1, billet: "pris",
+    fichiers: [{src: "billets/2026-10-30-nozomi-1B.jpg.enc", nom: "Place 1-B"}, {src: "billets/2026-10-30-nozomi-1C.jpg.enc", nom: "Place 1-C"}, {src: "billets/2026-10-30-nozomi-1D.jpg.enc", nom: "Place 1-D"}] },
   { date: "2026-10-30", titre: "Soirée Shibuya et Shinjuku", adresse: "Shibuya, Tokyo", note: "Arcade.", marche: 2 },
   { date: "2026-10-30", titre: "Tsurutontan (udon)", adresse: "Tsurutontan Udon Noodle Brasserie Shibuya, Shibuya, Tokyo", note: "Réservation.", marche: 0, billet: "attendu" },
   { date: "2026-10-31", titre: "Harajuku", adresse: "Takeshita Street, Harajuku, Shibuya, Tokyo", marche: 3 },
