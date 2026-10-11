@@ -339,7 +339,7 @@ function wicon(k, w) {
 
   $('#apps').innerHTML = liste.map((a, i) => `
     <div class="card appli stagger" data-appli="${i}" role="link" tabindex="0" style="--i:${i}">
-      ${icones[a.id] ? `<img src="${icones[a.id]}" alt="" width="52" height="52">` : '<span class="vide"></span>'}
+      ${icones[a.id] ? `<img src="${icones[a.id]}" alt="" width="52" height="52">` : `<span class="vide">${esc((a.nom || '?').charAt(0))}</span>`}
       <div class="role">${esc(a.role || a.nom)}</div>
       ${I.fleche.replace('<svg ', '<svg class="fleche" ')}
       <div class="nom">${esc(a.nom)}${a.schema && a.aVerifier ? '<span class="tag est">ouverture à tester</span>' : ''}</div>

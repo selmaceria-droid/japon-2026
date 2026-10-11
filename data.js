@@ -72,9 +72,25 @@ const APPS = [
   { nom: "GO", role: "Prendre un taxi", id: 1254341709,
     desc: "L'app de taxi la plus répandue au Japon. On commande, on suit la voiture sur la carte et on paie dedans." },
 
-  { nom: "Kuli Kuli", role: "Traduire un truc", id: 6458146511,
-    schema: "kulikuli://", aVerifier: true,
-    desc: "Traduction à l'appareil photo, à la voix ou au texte. Pour les menus sans photos et les panneaux." },
+  { nom: "Google Traduction", role: "Traduire un truc", id: 414706506,
+    schema: "googletranslate://", aVerifier: true,
+    desc: "Gratuite, sans limite. L'appareil photo traduit menus et panneaux. Télécharger le japonais avant de partir : elle marche alors hors ligne." },
+
+  { nom: "Google Maps", role: "Trouver un lieu", id: 585027354,
+    schema: "comgooglemaps://",
+    desc: "Marche, bus et restaurants avec leurs avis. Complète Japan Travel pour les trains. Télécharger la zone de Tokyo hors ligne." },
+
+  { nom: "Safety tips", role: "Être alerté", id: 858357174,
+    desc: "L'app officielle de l'Agence du tourisme japonaise : alertes séisme, tsunami, typhon et chaleur, en français. Gratuite." },
+
+  { nom: "smartEX", role: "Voir le Shinkansen", id: 1253336330,
+    desc: "Nos Shinkansen du 20 et du 30 y sont réservés, sur le compte de Selma. On peut y lier une place à sa Suica pour passer le portique sans QR." },
+
+  { nom: "Universal Studios Japan", role: "Le parc du 28", id: 532097000,
+    desc: "L'app officielle, gratuite : temps d'attente, plan, et entrées à horaire pour Super Nintendo World." },
+
+  { nom: "Tabelog", role: "Choisir un resto", id: 6752922875,
+    desc: "La référence japonaise des restaurants, en version voyageurs avec menus traduits et réservation. Gratuite ; une option premium existe, inutile ici." },
 
   { nom: "Japan Wi-Fi auto-connect", role: "Se connecter au wifi", id: 1461015351,
     desc: "Connexion automatique aux wifi gratuits : aéroports, gares, trains, konbini, cafés. À installer avant de partir." },

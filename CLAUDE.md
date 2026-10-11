@@ -125,6 +125,10 @@ ma branche ».
 - **Les schémas d'ouverture des apps** (`schema` dans `APPS`) marqués `aVerifier`
   sont des suppositions ; les éditeurs ne les documentent pas. Pour en tester un :
   le taper dans Safari sur l'iPhone.
+- **Icônes manquantes** dans l'onglet Apps (l'initiale s'affiche à la place) :
+  Google Traduction, Google Maps, Safety tips, smartEX, Universal Studios Japan,
+  Tabelog. Les serveurs d'Apple étaient bloqués depuis la session distante : les
+  régénérer dans `icones-apps.js` depuis le Mac (112×112, WebP, base64).
 - Si le planning définitif migre vers l'app **Stippl**, réaligner `data.js` dessus.
 
 ## Ton
