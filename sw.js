@@ -1,8 +1,12 @@
 // Garde l'app disponible hors ligne (métro, avion…).
 // Changez VERSION à chaque mise à jour pour forcer le rafraîchissement.
-const VERSION = 'japon-v29';
+const VERSION = 'japon-v30';
 const FILES = ['./', 'index.html', 'installer.html', 'selma.html', 'app.js', 'data.js', 'icones-apps.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png',
   // les billets livrés avec l'app (chiffrés), pour les avoir au portique sans réseau
+  'billets/2026-10-13-af186-26C.jpg.enc',
+  'billets/2026-10-13-af186-26D.jpg.enc',
+  'billets/2026-10-13-af186-26E.jpg.enc',
+  'billets/2026-10-13-af186-26H.jpg.enc',
   'billets/2026-10-14-tokyo-acces.jpg.enc',
   'billets/2026-10-14-tokyo-boite-a-cle.jpg.enc',
   'billets/2026-10-14-tokyo-immeuble.jpg.enc',
