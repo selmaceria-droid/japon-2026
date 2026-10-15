@@ -1,7 +1,7 @@
 # Japon 2026 — contexte du projet
 
 App web personnelle pour un voyage au Japon, **du 13 octobre au 4 novembre 2026**.
-Selma Ceria voyage avec Syan (son copain), sa mère Nidia qui les rejoint le 15,
+Selma Ceria voyage avec Syan (son copain), sa mère Nidia qui les rejoint le 16 vers 19h30,
 et Selma, la sœur de Syan, qui détient les billets.
 
 ## Les adresses
