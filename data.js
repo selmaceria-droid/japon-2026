@@ -107,7 +107,7 @@ const APPS = [
 //   Dans un dépôt public, il est lisible par qui trouve le dépôt.
 const ALBUM = {
   titre: "japon \u201826 \ud83c\uddef\ud83c\uddf5\ud83c\udf38",
-  lien: "https://photos.icloud.com/shared/album/03aUuBdZ6fd6AcUGFOUW5ZPfw"
+  lien: "https://photos.icloud.com/shared/album/0423DXn1RkV7ltl42N67FMwPA"
 };
 
 // --- ACTIVITÉS ----------------------------------------------
