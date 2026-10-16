@@ -205,7 +205,7 @@ function wicon(k, w) {
     </article>`;
   }
   $('#meteo').innerHTML = tiroir(seau.p, nbPasses, ['jour passé', 'jours passés']) + seau.v;
-  $('#maj').textContent = `Prévisions relevées le ${METEO_MAJ} (JMA, Weather Company, AccuWeather). Les relevés des années passées viennent de l'agence météo japonaise.`;
+  $('#maj').textContent = `Prévisions relevées le ${METEO_MAJ} (timeanddate, AccuWeather). Au-delà du 30 octobre, les modèles ne vont pas si loin : ce sont des tendances. Les relevés des années passées viennent de l'agence météo japonaise.`;
 })();
 
 /* ============================================================
