@@ -302,6 +302,14 @@ main{position:relative;z-index:1;padding:4px 16px calc(104px + var(--safe-b));ma
 .voir .btns{margin:0}
 .voir .btn{background:#f3f3f3;border-color:#e2e2e2;color:#222}
 .voir .btn[hidden]{display:none}
+/* barre de progression du voyage */
+.progres{margin:0 2px 20px;padding:14px 16px;border-radius:16px;background:var(--paper);border:1px solid var(--line);box-shadow:var(--sh-s)}
+.progres .haut{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:13px;color:var(--mute)}
+.progres .haut b{font-family:var(--serif);font-size:18px;color:var(--ink)}
+.progres .rail{position:relative;height:8px;border-radius:99px;background:var(--line2);margin:10px 0 6px;overflow:hidden}
+.progres .rail i{position:absolute;inset:0 auto 0 0;border-radius:99px;background:linear-gradient(90deg,var(--momiji),var(--kin))}
+.progres .rail s{position:absolute;top:0;bottom:0;width:2px;background:var(--paper);opacity:.9}
+.progres .bas{display:flex;justify-content:space-between;font-size:11.5px;color:var(--mute)}
 /* onglet billets */
 .bil{margin-bottom:11px}
 .bil .quand{font-size:12.5px;font-weight:600;color:var(--momiji);text-transform:capitalize}
@@ -431,6 +439,7 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var
     <h2 class="sec"><span class="sceau s-route"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M2.4 6.4c4.4 1.6 14.8 1.6 19.2 0"/><path d="M4.8 10h14.4"/><path d="M6.5 7.4V21M17.5 7.4V21"/></svg></span>Notre itinéraire</h2>
     <p class="sub">Du 14 octobre au 3 novembre, de Tokyo à Tokyo.</p>
     <div class="tools"><button class="btn warm" data-cal-all><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="4"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Ajouter tout le voyage au calendrier</button></div>
+    <div id="progres"></div>
     <div id="itin"></div>
   </section>
   <section class="view" id="v-act">
