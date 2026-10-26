@@ -241,6 +241,17 @@ function wicon(k, w) {
       </div></div>`;
   })(e, i)));
   $('#itin').innerHTML = tiroir(passees.join(''), passees.length, ['étape passée', 'étapes passées']) + aVenir.join('');
+  // Barre de progression : jour du voyage, avec un repère à chaque changement d'étape.
+  const jourN = Math.round((D(todayStr) - D(DEBUT)) / 864e5) + 1;
+  const fait = Math.min(Math.max(jourN, 0), JOURS), reste = JOURS - fait;
+  const titre = jourN < 1 ? `Départ dans ${1 - jourN} jour${1 - jourN > 1 ? 's' : ''}`
+    : jourN > JOURS ? 'Voyage terminé' : `Jour ${jourN} sur ${JOURS}`;
+  const sous = jourN < 1 ? `${JOURS} jours de voyage` : jourN > JOURS ? 'Bon retour !'
+    : reste ? `encore ${reste} jour${reste > 1 ? 's' : ''}` : 'dernier jour';
+  const reperes = ETAPES.slice(1).map(e => `<s style="left:${((Math.round((D(e.du) - D(DEBUT)) / 864e5)) / JOURS * 100).toFixed(1)}%"></s>`).join('');
+  $('#progres').innerHTML = `<div class="progres stagger"><div class="haut"><b>${titre}</b><span>${sous}</span></div>
+    <div class="rail" role="progressbar" aria-valuemin="0" aria-valuemax="${JOURS}" aria-valuenow="${fait}"><i style="width:${(fait / JOURS * 100).toFixed(1)}%"></i>${reperes}</div>
+    <div class="bas"><span>13 oct. · Paris</span><span>4 nov. · Paris</span></div></div>`;
 })();
 
 /* ============================================================
