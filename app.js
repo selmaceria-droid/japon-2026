@@ -205,7 +205,7 @@ function wicon(k, w) {
     </article>`;
   }
   $('#meteo').innerHTML = tiroir(seau.p, nbPasses, ['jour passé', 'jours passés']) + seau.v;
-  $('#maj').textContent = `Prévisions relevées le ${METEO_MAJ} (AccuWeather, timeanddate). Au-delà du 1ᵉʳ novembre, les modèles ne vont pas si loin : ce sont des tendances. Les relevés des années passées viennent de l'agence météo japonaise.`;
+  $('#maj').textContent = `Prévisions relevées le ${METEO_MAJ} (tenki.jp, AccuWeather). Les derniers jours du séjour sont désormais tous couverts par une vraie prévision. Les relevés des années passées viennent de l'agence météo japonaise.`;
 })();
 
 /* ============================================================
